@@ -13,10 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\01-triangle">
+      <UniqueIdentifier>{32776d3c-2741-434d-a68d-07691c198e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common">
+      <UniqueIdentifier>{f61b300c-dd13-4186-8a9e-efd676d50732}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\01-triangle\triangle-main.cpp">
+      <Filter>源文件\01-triangle</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\01-triangle\triangle-main.h">
+      <Filter>源文件\01-triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\common.h">
+      <Filter>源文件\common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
