@@ -27,12 +27,15 @@
     <ClCompile Include="src\01-triangle\triangle-main.cpp">
       <Filter>源文件\01-triangle</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\vulkanApplication.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
       <Filter>源文件\01-triangle</Filter>
     </ClInclude>
-    <ClInclude Include="src\common\common.h">
+    <ClInclude Include="src\common\vulkanApplication.h">
       <Filter>源文件\common</Filter>
     </ClInclude>
   </ItemGroup>

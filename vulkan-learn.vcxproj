@@ -144,11 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\01-triangle\triangle-main.cpp" />
+    <ClCompile Include="src\common\vulkanApplication.cpp" />
     <ClCompile Include="vulkan-learn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h" />
-    <ClInclude Include="src\common\common.h" />
+    <ClInclude Include="src\common\vulkanApplication.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
