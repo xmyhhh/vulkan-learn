@@ -3,16 +3,31 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 #include <iostream>
+#include <vector>
 
 class VulkanApplication {
 public:
 	GLFWwindow* window;
 	VkInstance instance;
-	virtual void run();
 
+#ifdef NDEBUG
+	static const bool enableValidationLayers = false;
+#else
+	static const bool enableValidationLayers = true;
+#endif
+
+	virtual void run();
+	virtual void cleanup();
 private:
-	uint32_t WIDTH = 800;
-	uint32_t HEIGHT = 600;
+	const uint32_t WIDTH = 800;
+	const uint32_t HEIGHT = 600;
+
+	std::vector<const char*> validationLayers = {
+	"VK_LAYER_KHRONOS_validation"
+	};
+
+
+	VkDebugUtilsMessengerEXT debugMessenger;
 
 	void initVulkan();
 
@@ -20,4 +35,9 @@ private:
 
 	void createInstance();
 
+	void setupDebugMessenger();
+
+	void pickPhysicalDevice();
+
+	bool checkValidationLayerSupport();
 };

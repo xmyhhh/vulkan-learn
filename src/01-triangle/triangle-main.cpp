@@ -8,7 +8,9 @@ void TriangleApplication::run()
 {
 	this->VulkanApplication::run();
 	std::cout << "TriangleApplication run" << std::endl;
+
 	mainLoop();
+
 	cleanup();
 
 }
@@ -22,6 +24,8 @@ void TriangleApplication::mainLoop()
 
 void TriangleApplication::cleanup()
 {
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	this->VulkanApplication::cleanup();
+
+
+
 }
