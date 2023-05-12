@@ -60,9 +60,10 @@ std::vector<const char*> getRequiredExtensions() {
 
 void VulkanApplication::run()
 {
+	std::cout << "VulkanApplication run" << std::endl;
 	initWindow();
 	initVulkan();
-	std::cout << "VulkanApplication run" << std::endl;
+
 }
 
 void VulkanApplication::cleanup()
