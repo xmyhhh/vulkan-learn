@@ -4,6 +4,11 @@
 #include <vulkan/vulkan.h>
 #include <iostream>
 #include <vector>
+#include <set>
+#include <optional>
+#include <cstdint> // Necessary for uint32_t
+#include <limits> // Necessary for std::numeric_limits
+#include <algorithm> // Necessary for std::clamp
 
 class VulkanApplication {
 public:
@@ -11,8 +16,17 @@ public:
 	VkInstance instance;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice device;
-	VkQueue graphicsQueue;
 
+	VkSurfaceKHR surface;
+
+	VkQueue graphicsQueue;
+	VkQueue presentQueue;
+
+	VkSwapchainKHR swapChain;
+
+	const std::vector<const char*> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
 
 #ifdef NDEBUG
 	static const bool enableValidationLayers = false;
@@ -45,5 +59,9 @@ private:
 
 	void createLogicalDevice();
 
+	void createSurface();
+
 	bool checkValidationLayerSupport();
+
+	void createSwapChain();
 };
