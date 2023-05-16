@@ -9,7 +9,8 @@
 #include <cstdint> // Necessary for uint32_t
 #include <limits> // Necessary for std::numeric_limits
 #include <algorithm> // Necessary for std::clamp
-
+#include <fstream>
+#include <string>
 class VulkanApplication {
 public:
 	GLFWwindow* window;
@@ -27,6 +28,8 @@ public:
 	VkExtent2D swapChainExtent;
 	std::vector<VkImage> swapChainImages;
 
+	std::vector<VkImageView> swapChainImageViews;
+	VkPipelineLayout pipelineLayout;
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
@@ -39,6 +42,9 @@ public:
 
 	virtual void run();
 	virtual void cleanup();
+
+	static std::vector<char> readFile(const std::string& filename);
+	VkShaderModule createShaderModule(const std::vector<char>& code);
 private:
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
@@ -67,4 +73,8 @@ private:
 	bool checkValidationLayerSupport();
 
 	void createSwapChain();
+
+	void createImageViews();
+
+	virtual void createGraphicsPipeline() = 0;
 };

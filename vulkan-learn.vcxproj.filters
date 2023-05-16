@@ -19,6 +19,9 @@
     <Filter Include="源文件\common">
       <UniqueIdentifier>{f61b300c-dd13-4186-8a9e-efd676d50732}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\01-triangle\shader">
+      <UniqueIdentifier>{3f1920ed-b7e8-4b61-87ec-679ba32c0ba4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -38,5 +41,16 @@
     <ClInclude Include="src\common\vulkanApplication.h">
       <Filter>源文件\common</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\01-triangle\shader\shader.frag">
+      <Filter>源文件\01-triangle\shader</Filter>
+    </None>
+    <None Include="src\01-triangle\shader\shader.vert">
+      <Filter>源文件\01-triangle\shader</Filter>
+    </None>
+    <None Include="src\01-triangle\shader\compile.bat">
+      <Filter>源文件\01-triangle\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

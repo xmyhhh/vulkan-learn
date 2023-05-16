@@ -7,8 +7,10 @@ public:
 	void cleanup();
 
 private:
+
+
 	void mainLoop();
 
-	
+	void createGraphicsPipeline();
 
 };
