@@ -272,7 +272,10 @@ void VulkanApplication::createSwapChain() {
 	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
 	VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, window);
 
-
+	// store the format and extent we've chosen for the swap chain images in member variables. We'll need them in future chapters.
+	swapChainImageFormat = surfaceFormat.format;
+	swapChainExtent = extent;
+	
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
 	if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
 		//where 0 is a special value that means that there is no maximum
@@ -320,6 +323,10 @@ void VulkanApplication::createSwapChain() {
 	if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create swap chain!");
 	}
+
+	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
+	swapChainImages.resize(imageCount);
+	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
 }
 
 void VulkanApplication::createSurface() {
