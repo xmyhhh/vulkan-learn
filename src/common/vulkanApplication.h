@@ -9,6 +9,10 @@ class VulkanApplication {
 public:
 	GLFWwindow* window;
 	VkInstance instance;
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkDevice device;
+	VkQueue graphicsQueue;
+
 
 #ifdef NDEBUG
 	static const bool enableValidationLayers = false;
@@ -38,6 +42,8 @@ private:
 	void setupDebugMessenger();
 
 	void pickPhysicalDevice();
+
+	void createLogicalDevice();
 
 	bool checkValidationLayerSupport();
 };
