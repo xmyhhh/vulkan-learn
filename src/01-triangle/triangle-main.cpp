@@ -70,7 +70,7 @@ void TriangleApplication::mainLoop()
 		glfwPollEvents();
 		drawFrame();
 	}
-
+	//wait for the logical device to finish operations before exiting mainLoop and destroying the window
 	vkDeviceWaitIdle(device);
 }
 
