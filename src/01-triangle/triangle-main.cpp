@@ -8,9 +8,7 @@ void TriangleApplication::run()
 {
 	this->VulkanApplication::run();
 	std::cout << "TriangleApplication run" << std::endl;
-
 	mainLoop();
-
 	cleanup();
 
 }
@@ -23,11 +21,8 @@ void TriangleApplication::drawFrame()
 
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
-
 	vkResetCommandBuffer(commandBuffer, 0);
-
 	recordCommandBuffer(commandBuffer, imageIndex);
-
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 

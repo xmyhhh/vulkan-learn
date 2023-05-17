@@ -11,6 +11,23 @@
 #include <algorithm> // Necessary for std::clamp
 #include <fstream>
 #include <string>
+
+struct SwapChainSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct QueueFamilyIndices {
+	//支持图形命令的队列族和支持表达的队列族可能不重叠
+	std::optional<uint32_t> graphicsFamily;  //supporting drawing commands
+	std::optional<uint32_t> presentFamily;   //supporting presentation commands
+
+	bool isComplete() {
+		return graphicsFamily.has_value() && presentFamily.has_value();
+	}
+};
+
 class VulkanApplication {
 public:
 	GLFWwindow* window;
@@ -41,6 +58,9 @@ public:
 	VkSemaphore imageAvailableSemaphore;
 	VkSemaphore renderFinishedSemaphore;
 	VkFence inFlightFence;
+
+	SwapChainSupportDetails swapChainSupport;
+	QueueFamilyIndices indices;
 
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
