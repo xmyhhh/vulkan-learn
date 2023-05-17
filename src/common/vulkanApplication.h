@@ -29,7 +29,19 @@ public:
 	std::vector<VkImage> swapChainImages;
 
 	std::vector<VkImageView> swapChainImageViews;
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+
+	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
+
+	VkCommandPool commandPool;
+	VkCommandBuffer commandBuffer;
+
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	VkFence inFlightFence;
+
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
@@ -45,6 +57,9 @@ public:
 
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+
 private:
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
@@ -76,5 +91,17 @@ private:
 
 	void createImageViews();
 
+	void createCommandPool();
+
+	void createCommandBuffer();
+
+
+
+	void createSyncObjects();
+
+	virtual void createRenderPass();
+
 	virtual void createGraphicsPipeline() = 0;
+
+	virtual void createFramebuffers();
 };
