@@ -7,6 +7,8 @@ public:
 
 
 private:
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
 	void drawFrame();
 
 	void mainLoop();

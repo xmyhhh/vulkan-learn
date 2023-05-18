@@ -136,7 +136,7 @@ public:
 
 	static std::vector<char> readFile(const std::string& filename);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
-	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
@@ -185,4 +185,6 @@ private:
 	virtual void createFramebuffers();
 
 	virtual void createVertexBuffer();
-	};
+
+	virtual void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) = 0;
+};
