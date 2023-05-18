@@ -2,18 +2,17 @@
 
 #include <stdexcept>
 #include <cstdlib>
-#include "triangle-main.h"
+#include "vertex-main.h"
 
-void TriangleApplication::run()
+void VertexApplication::run()
 {
 	this->VulkanApplication::run();
 	std::cout << "TriangleApplication run" << std::endl;
 	mainLoop();
 	cleanup();
-
 }
 
-void TriangleApplication::drawFrame()
+void VertexApplication::drawFrame()
 {
 	vkWaitForFences(device, 1, &inFlightFence, VK_TRUE, UINT64_MAX);
 	//After waiting, we need to manually reset the fence to the unsignaled state
@@ -59,7 +58,7 @@ void TriangleApplication::drawFrame()
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 }
 
-void TriangleApplication::mainLoop()
+void VertexApplication::mainLoop()
 {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -69,10 +68,16 @@ void TriangleApplication::mainLoop()
 	vkDeviceWaitIdle(device);
 }
 
-void TriangleApplication::createGraphicsPipeline()
+void VertexApplication::createGraphicsPipeline()
 {
-	auto vertShaderCode = readFile("src/01-triangle/shader/vert.spv");
-	auto fragShaderCode = readFile("src/01-triangle/shader/frag.spv");
+	auto bindingDescription = Vertex::getBindingDescription();
+	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+
+
+
+
+	auto vertShaderCode = readFile("src/02-vertex buffer/shader/vert.spv");
+	auto fragShaderCode = readFile("src/02-vertex buffer/shader/frag.spv");
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -99,9 +104,12 @@ void TriangleApplication::createGraphicsPipeline()
 	因为我们直接在顶点着色器中对顶点数据进行硬编码，所以我们将填充此结构以指定目前没有要加载的顶点数据。我们将在顶点缓冲区一章中回到这一点。*/
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-		.vertexBindingDescriptionCount = 0,
-		.vertexAttributeDescriptionCount = 0,
+		.pVertexBindingDescriptions = &bindingDescription,
+		.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
+		.pVertexAttributeDescriptions = attributeDescriptions.data(),
 	};
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+
 
 	/*VkPipelineInputAssemblyStateCreateInfo结构描述了两件事：
 		what kind of geometry will be drawn from the vertices，
@@ -216,5 +224,55 @@ void TriangleApplication::createGraphicsPipeline()
 	}
 	vkDestroyShaderModule(device, fragShaderModule, nullptr);
 	vkDestroyShaderModule(device, vertShaderModule, nullptr);
+}
+
+void VertexApplication::createVertexBuffer()
+{
+	VkBufferCreateInfo bufferInfo{
+		.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+		.size = sizeof(vertices[0]) * vertices.size(),
+		.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		//Just like the images in the swap chain, buffers can also be owned by a specific queue family or be shared between multiple at the same time. 
+		//The buffer will only be used from the graphics queue, so we can stick to exclusive access.
+		.sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+	};
+
+	VkBufferCreateInfo bufferInfo{
+		.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+		.size = sizeof(vertices[0]) * vertices.size(),
+		.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+		.sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+	};
+
+	if (vkCreateBuffer(device, &bufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create vertex buffer!");
+	}
+
+	VkMemoryRequirements memRequirements;
+	vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
+
+
+	VkMemoryAllocateInfo allocInfo{
+		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+		.allocationSize = memRequirements.size,
+		.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT),
+	};
+
+	if (vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate vertex buffer memory!");
+	}
+
+	vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
+
+	void* data;
+	vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);
+}
+
+void VertexApplication::cleanup()
+{
+	vkDestroyBuffer(device, vertexBuffer, nullptr);
+	vkFreeMemory(device, vertexBufferMemory, nullptr);
+
+	this->VulkanApplication::cleanup();
 }
 

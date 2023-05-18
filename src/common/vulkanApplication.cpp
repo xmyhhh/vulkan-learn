@@ -278,6 +278,7 @@ void VulkanApplication::cleanup()
 	glfwTerminate();
 }
 
+
 void VulkanApplication::initVulkan()
 {
 	createInstance();
@@ -285,8 +286,8 @@ void VulkanApplication::initVulkan()
 	createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
-	createSwapChain();
-	createImageViews();
+	createSwapChain();       //创建VkSwapchainKHR swapChain; 并从swapChain拿到所有VkImage放入std::vector<VkImage> swapChainImages;
+	createImageViews();      //创建std::vector<VkImageView> swapChainImageViews并和std::vector<VkImage> swapChainImages;建立一对一关联
 	createRenderPass();
 	createGraphicsPipeline();
 	createFramebuffers();
@@ -530,10 +531,16 @@ void VulkanApplication::createImageViews() {
 
 }
 void VulkanApplication::createRenderPass() {
+
+	//a single color buffer attachment represented by one of the images from the swap chain
 	VkAttachmentDescription colorAttachment{
 		.format = swapChainImageFormat,
+		//The format of the color attachment should match the format of the swap chain images, 
+		//and we're not doing anything with multisampling yet, so we'll stick to 1 sample.
 		.samples = VK_SAMPLE_COUNT_1_BIT,
+		//what to do with the data in the attachment before rendering
 		.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+		//what to do with the data in the attachment after rendering
 		.storeOp = VK_ATTACHMENT_STORE_OP_STORE,
 		.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
 		.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
@@ -542,20 +549,32 @@ void VulkanApplication::createRenderPass() {
 		.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
 	};
 
-	//A single render pass can consist of multiple subpasses. 
-	//Subpasses are subsequent rendering operations that depend on the contents of framebuffers in previous passes
-	//Every subpass references one or more of the attachments that we've described using the structure in the previous sections
 	VkAttachmentReference colorAttachmentRef{
 		// specifies which attachment to reference by its index in the attachment descriptions array
-		.attachment = 0, 
+		.attachment = 0, //这个0应该表示的是renderPassInfo中pAttachments数组第0个
+		//Textures and framebuffers in Vulkan are represented by VkImage objects with a certain pixel format,
 		.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
 	};
 
-	//The subpass is described using a VkSubpassDescription structure:
+	//A single render pass can consist of multiple subpasses. 
+	//Subpasses are subsequent rendering operations that depend on the contents of framebuffers in previous passes
+	//Every subpass references one or more of the attachments 
 	VkSubpassDescription subpass{
+		//being a graphics subpass
 		.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
 		.colorAttachmentCount = 1,
 		.pColorAttachments = &colorAttachmentRef,
+
+		  /*  VkSubpassDescriptionFlags       flags;
+			VkPipelineBindPoint             pipelineBindPoint;
+			uint32_t                        inputAttachmentCount;
+			const VkAttachmentReference* pInputAttachments;
+			uint32_t                        colorAttachmentCount;
+			const VkAttachmentReference* pColorAttachments;
+			const VkAttachmentReference* pResolveAttachments;
+			const VkAttachmentReference* pDepthStencilAttachment;
+			uint32_t                        preserveAttachmentCount;
+			const uint32_t* pPreserveAttachments;*/
 	};
 
 	VkSubpassDependency dependency{
@@ -622,6 +641,13 @@ void VulkanApplication::createCommandPool() {
 		throw std::runtime_error("failed to create command pool!");
 	}
 }
+
+void VulkanApplication::createVertexBuffer()
+{
+
+}
+
+
 void VulkanApplication::createCommandBuffer() {
 	VkCommandBufferAllocateInfo allocInfo{
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -663,18 +689,19 @@ void VulkanApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint3
 	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
 		throw std::runtime_error("failed to begin recording command buffer!");
 	}
-
-	VkRenderPassBeginInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = renderPass;
-	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
-	renderPassInfo.renderArea.offset = { 0, 0 };
-	renderPassInfo.renderArea.extent = swapChainExtent;
-
 	VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
-	renderPassInfo.clearValueCount = 1;
-	renderPassInfo.pClearValues = &clearColor;
+	VkRenderPassBeginInfo renderPassInfo{
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = renderPass,
+		.framebuffer = swapChainFramebuffers[imageIndex],
+		.clearValueCount = 1,
+		.pClearValues = &clearColor,
+	};
+	renderPassInfo.renderArea.offset = { 0, 0 },
+	renderPassInfo.renderArea.extent = swapChainExtent,
 
+	//VK_SUBPASS_CONTENTS_INLINE: The render pass commands will be embedded in the primary command buffer itself and no secondary command buffers will be executed.
+	//VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS: The render pass commands will be executed from secondary command buffers.
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
@@ -767,4 +794,18 @@ VkShaderModule VulkanApplication::createShaderModule(const std::vector<char>& co
 	}
 
 	return shaderModule;
+}
+
+
+uint32_t VulkanApplication::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+	VkPhysicalDeviceMemoryProperties memProperties;
+	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
+
+	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+			return i;
+		}
+	}
+
+	throw std::runtime_error("failed to find suitable memory type!");
 }

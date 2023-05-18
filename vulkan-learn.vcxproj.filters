@@ -22,6 +22,12 @@
     <Filter Include="源文件\01-triangle\shader">
       <UniqueIdentifier>{3f1920ed-b7e8-4b61-87ec-679ba32c0ba4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\02-vertex buffer">
+      <UniqueIdentifier>{802a6c79-aa35-4afb-99d1-9dfd33f7c71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\02-vertex buffer\shader">
+      <UniqueIdentifier>{f25a11af-a647-4ab9-a5e8-66391f89ce8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -33,6 +39,9 @@
     <ClCompile Include="src\common\vulkanApplication.cpp">
       <Filter>源文件\common</Filter>
     </ClCompile>
+    <ClCompile Include="src\02-vertex buffer\vertex-main.cpp">
+      <Filter>源文件\02-vertex buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -40,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="src\common\vulkanApplication.h">
       <Filter>源文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02-vertex buffer\vertex-main.h">
+      <Filter>源文件\02-vertex buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +63,12 @@
     </None>
     <None Include="src\01-triangle\shader\compile.bat">
       <Filter>源文件\01-triangle\shader</Filter>
+    </None>
+    <None Include="src\02-vertex buffer\shader\shader.frag">
+      <Filter>源文件\02-vertex buffer\shader</Filter>
+    </None>
+    <None Include="src\02-vertex buffer\shader\shader.vert">
+      <Filter>源文件\02-vertex buffer\shader</Filter>
     </None>
   </ItemGroup>
 </Project>

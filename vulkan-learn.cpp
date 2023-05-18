@@ -1,11 +1,12 @@
 ﻿#include <iostream>
 #include "src/01-triangle/triangle-main.h"
+#include "src/02-vertex buffer/vertex-main.h"
 int main()
 {
 	std::cout << "Hello World!\n";
 
-	TriangleApplication pApp;
-
+	//TriangleApplication pApp;
+	VertexApplication pApp;
 	try {
 		pApp.run();
 	}

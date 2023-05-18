@@ -4,7 +4,7 @@ class TriangleApplication :public VulkanApplication {
 public:
 
 	void run();
-	void cleanup();
+
 
 private:
 	void drawFrame();
