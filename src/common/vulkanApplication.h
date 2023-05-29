@@ -135,8 +135,9 @@ public:
 	virtual void cleanup();
 
 	static std::vector<char> readFile(const std::string& filename);
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
-
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
@@ -183,6 +184,8 @@ private:
 	virtual void createGraphicsPipeline() = 0;
 
 	virtual void createFramebuffers();
+
+	virtual void createIndexBuffer();
 
 	virtual void createVertexBuffer();
 

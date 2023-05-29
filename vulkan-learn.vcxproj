@@ -145,12 +145,14 @@
   <ItemGroup>
     <ClCompile Include="src\01-triangle\triangle-main.cpp" />
     <ClCompile Include="src\02-vertex buffer\vertex-main.cpp" />
+    <ClCompile Include="src\03-uniform buffer\UBO-main.cpp" />
     <ClCompile Include="src\common\vulkanApplication.cpp" />
     <ClCompile Include="vulkan-learn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h" />
     <ClInclude Include="src\02-vertex buffer\vertex-main.h" />
+    <ClInclude Include="src\03-uniform buffer\UBO-main.h" />
     <ClInclude Include="src\common\vulkanApplication.h" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +161,8 @@
     <None Include="src\01-triangle\shader\shader.vert" />
     <None Include="src\02-vertex buffer\shader\shader.frag" />
     <None Include="src\02-vertex buffer\shader\shader.vert" />
+    <None Include="src\03-uniform buffer\shader\shader.frag" />
+    <None Include="src\03-uniform buffer\shader\shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -278,6 +278,89 @@ void VulkanApplication::cleanup()
 	glfwTerminate();
 }
 
+void VulkanApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+{
+	//allocate a temporary command buffer
+	VkCommandBufferAllocateInfo allocInfo{
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		.commandPool = commandPool,
+		.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		.commandBufferCount = 1
+	};
+
+	VkCommandBuffer commandBuffer;
+	vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
+	//immediately start recording the command buffer
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	vkBeginCommandBuffer(commandBuffer, &beginInfo);
+	{
+		VkBufferCopy copyRegion{};
+		copyRegion.srcOffset = 0; // Optional
+		copyRegion.dstOffset = 0; // Optional
+		copyRegion.size = size;
+		vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+	}
+	vkEndCommandBuffer(commandBuffer);
+
+	VkSubmitInfo submitInfo{
+		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		.commandBufferCount = 1,
+		.pCommandBuffers = &commandBuffer,
+	};
+
+	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(graphicsQueue);
+
+	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+}
+
+void VulkanApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+{
+	//当申请一个vkBuffer的时候，它只是定义了一个逻辑上的对象
+	//真正需要开辟物理内存时，需要根据要存储的是对象类型来决定给与它什么样的内存
+	/*流程
+		申请一个buffer
+			定义VkBufferCreateInfo，给出size
+			定义VkBuffer对象：用于管理一块GPU物理内存的逻辑对象
+			调用vkCreateBuffer
+		获取这个buffer的内存请求信息
+			定义VkMemoryRequirements：GPU上的物理内存是被分成各种类型的，存储纹理的，存储VBO的
+			调用vkGetBufferMemoryRequirements获取info
+		获取分配器信息
+			定义VkMemoryAllocateInfo
+			设置allocationSize和memoryTypeIndex
+			定义VkDeviceMemory对象：代表是一块GPU上的真实内存
+		调用vkAllocateMemory获取内存
+		调用vkBindBufferMemory把VkBuffer对象和VkDeviceMemory对象绑定*/
+	VkBufferCreateInfo bufferInfo{};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = size;
+	bufferInfo.usage = usage;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create buffer!");
+	}
+
+	VkMemoryRequirements memRequirements;
+	vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+
+	VkMemoryAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.allocationSize = memRequirements.size;
+	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+	//ou're not supposed to actually call vkAllocateMemory for every individual buffer. 
+	//The maximum number of simultaneous memory allocations is limited by the maxMemoryAllocationCount physical device limit
+	if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate buffer memory!");
+	}
+
+	vkBindBufferMemory(device, buffer, bufferMemory, 0);
+}
+
 
 void VulkanApplication::initVulkan()
 {
@@ -292,6 +375,7 @@ void VulkanApplication::initVulkan()
 	createGraphicsPipeline();
 	createFramebuffers();
 	createCommandPool();
+	createIndexBuffer();
 	createVertexBuffer();
 	createCommandBuffer();
 	createSyncObjects();
@@ -641,6 +725,11 @@ void VulkanApplication::createCommandPool() {
 	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create command pool!");
 	}
+}
+
+void VulkanApplication::createIndexBuffer()
+{
+
 }
 
 void VulkanApplication::createVertexBuffer()

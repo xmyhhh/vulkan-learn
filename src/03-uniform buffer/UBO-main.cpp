@@ -2,18 +2,17 @@
 
 #include <stdexcept>
 #include <cstdlib>
-#include "vertex-main.h"
+#include "UBO-main.h"
 
-void VertexApplication::run()
+void UBOApplication::run()
 {
 	this->VulkanApplication::run();
-
 	std::cout << "TriangleApplication run" << std::endl;
 	mainLoop();
 	cleanup();
 }
 
-void VertexApplication::drawFrame()
+void UBOApplication::drawFrame()
 {
 	vkWaitForFences(device, 1, &inFlightFence, VK_TRUE, UINT64_MAX);
 	//After waiting, we need to manually reset the fence to the unsignaled state
@@ -59,7 +58,7 @@ void VertexApplication::drawFrame()
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 }
 
-void VertexApplication::mainLoop()
+void UBOApplication::mainLoop()
 {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -69,13 +68,10 @@ void VertexApplication::mainLoop()
 	vkDeviceWaitIdle(device);
 }
 
-void VertexApplication::createGraphicsPipeline()
+void UBOApplication::createGraphicsPipeline()
 {
 	auto bindingDescription = Vertex::getBindingDescription();
 	auto attributeDescriptions = Vertex::getAttributeDescriptions();
-
-
-
 
 	auto vertShaderCode = readFile("src/02-vertex buffer/shader/vert.spv");
 	auto fragShaderCode = readFile("src/02-vertex buffer/shader/frag.spv");
@@ -227,7 +223,7 @@ void VertexApplication::createGraphicsPipeline()
 	vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
 
-void VertexApplication::createVertexBuffer()
+void UBOApplication::createVertexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -246,7 +242,7 @@ void VertexApplication::createVertexBuffer()
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void VertexApplication::createIndexBuffer()
+void UBOApplication::createIndexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
@@ -268,7 +264,7 @@ void VertexApplication::createIndexBuffer()
 
 }
 
-void VertexApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
+void UBOApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {
 	//If the command buffer was already recorded once, 
 	//then a call to vkBeginCommandBuffer will implicitly reset it. 
@@ -329,7 +325,7 @@ void VertexApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint3
 
 }
 
-void VertexApplication::cleanup()
+void UBOApplication::cleanup()
 {
 	vkDestroyBuffer(device, indexBuffer, nullptr);
 	vkFreeMemory(device, indexBufferMemory, nullptr);

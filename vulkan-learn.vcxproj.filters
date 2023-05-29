@@ -28,6 +28,12 @@
     <Filter Include="源文件\02-vertex buffer\shader">
       <UniqueIdentifier>{f25a11af-a647-4ab9-a5e8-66391f89ce8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\03-uniform buffer">
+      <UniqueIdentifier>{413a6e1a-37d4-46af-b03b-62516f60d011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\03-uniform buffer\shader">
+      <UniqueIdentifier>{d453f233-7ab5-48dd-837b-cdeeecb0f12b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -42,6 +48,9 @@
     <ClCompile Include="src\02-vertex buffer\vertex-main.cpp">
       <Filter>源文件\02-vertex buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\03-uniform buffer\UBO-main.cpp">
+      <Filter>源文件\03-uniform buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -52,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="src\02-vertex buffer\vertex-main.h">
       <Filter>源文件\02-vertex buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\03-uniform buffer\UBO-main.h">
+      <Filter>源文件\03-uniform buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +81,12 @@
     </None>
     <None Include="src\02-vertex buffer\shader\shader.vert">
       <Filter>源文件\02-vertex buffer\shader</Filter>
+    </None>
+    <None Include="src\03-uniform buffer\shader\shader.frag">
+      <Filter>源文件\03-uniform buffer\shader</Filter>
+    </None>
+    <None Include="src\03-uniform buffer\shader\shader.vert">
+      <Filter>源文件\03-uniform buffer\shader</Filter>
     </None>
   </ItemGroup>
 </Project>

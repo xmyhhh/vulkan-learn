@@ -1,6 +1,6 @@
 #pragma once
 #include "../common/VulkanApplication.h"
-class VertexApplication :public VulkanApplication {
+class UBOApplication :public VulkanApplication {
 public :
 	void run();
 private:
