@@ -278,43 +278,86 @@ void VulkanApplication::cleanup()
 	glfwTerminate();
 }
 
-void VulkanApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+VkCommandBuffer VulkanApplication::beginSingleTimeCommands()
 {
-	//allocate a temporary command buffer
-	VkCommandBufferAllocateInfo allocInfo{
-		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-		.commandPool = commandPool,
-		.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-		.commandBufferCount = 1
-	};
+	VkCommandBufferAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandPool = commandPool;
+	allocInfo.commandBufferCount = 1;
 
 	VkCommandBuffer commandBuffer;
 	vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
-	//immediately start recording the command buffer
+
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 	vkBeginCommandBuffer(commandBuffer, &beginInfo);
-	{
-		VkBufferCopy copyRegion{};
-		copyRegion.srcOffset = 0; // Optional
-		copyRegion.dstOffset = 0; // Optional
-		copyRegion.size = size;
-		vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-	}
+
+	return commandBuffer;
+}
+
+void VulkanApplication::endSingleTimeCommands(VkCommandBuffer commandBuffer)
+{
 	vkEndCommandBuffer(commandBuffer);
 
-	VkSubmitInfo submitInfo{
-		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-		.commandBufferCount = 1,
-		.pCommandBuffers = &commandBuffer,
-	};
+	VkSubmitInfo submitInfo{};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &commandBuffer;
 
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
 	vkQueueWaitIdle(graphicsQueue);
 
 	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+}
+
+void VulkanApplication::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
+{
+	VkImageCreateInfo imageInfo{};
+	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	imageInfo.imageType = VK_IMAGE_TYPE_2D;
+	imageInfo.extent.width = width;
+	imageInfo.extent.height = height;
+	imageInfo.extent.depth = 1;
+	imageInfo.mipLevels = 1;
+	imageInfo.arrayLayers = 1;
+	imageInfo.format = format;
+	imageInfo.tiling = tiling;
+	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	imageInfo.usage = usage;
+	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+	if (vkCreateImage(device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create image!");
+	}
+
+	VkMemoryRequirements memRequirements;
+	vkGetImageMemoryRequirements(device, image, &memRequirements);
+
+	VkMemoryAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.allocationSize = memRequirements.size;
+	allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+	if (vkAllocateMemory(device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate image memory!");
+	}
+
+	vkBindImageMemory(device, image, imageMemory, 0);
+}
+
+void VulkanApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+{
+	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+
+	VkBufferCopy copyRegion{};
+	copyRegion.size = size;
+	vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+	endSingleTimeCommands(commandBuffer);
 }
 
 void VulkanApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
@@ -361,7 +404,6 @@ void VulkanApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-
 void VulkanApplication::initVulkan()
 {
 	createInstance();
@@ -371,7 +413,7 @@ void VulkanApplication::initVulkan()
 	createLogicalDevice();
 	createSwapChain();       //创建VkSwapchainKHR swapChain; 并从swapChain拿到所有VkImage放入std::vector<VkImage> swapChainImages;
 	createImageViews();      //创建std::vector<VkImageView> swapChainImageViews并和std::vector<VkImage> swapChainImages;建立一对一关联
-	
+
 	createRenderPass();
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
@@ -660,16 +702,16 @@ void VulkanApplication::createRenderPass() {
 		.colorAttachmentCount = 1,
 		.pColorAttachments = &colorAttachmentRef,
 
-		  /*  VkSubpassDescriptionFlags       flags;
-			VkPipelineBindPoint             pipelineBindPoint;
-			uint32_t                        inputAttachmentCount;
-			const VkAttachmentReference* pInputAttachments;
-			uint32_t                        colorAttachmentCount;
-			const VkAttachmentReference* pColorAttachments;
-			const VkAttachmentReference* pResolveAttachments;
-			const VkAttachmentReference* pDepthStencilAttachment;
-			uint32_t                        preserveAttachmentCount;
-			const uint32_t* pPreserveAttachments;*/
+		/*  VkSubpassDescriptionFlags       flags;
+		  VkPipelineBindPoint             pipelineBindPoint;
+		  uint32_t                        inputAttachmentCount;
+		  const VkAttachmentReference* pInputAttachments;
+		  uint32_t                        colorAttachmentCount;
+		  const VkAttachmentReference* pColorAttachments;
+		  const VkAttachmentReference* pResolveAttachments;
+		  const VkAttachmentReference* pDepthStencilAttachment;
+		  uint32_t                        preserveAttachmentCount;
+		  const uint32_t* pPreserveAttachments;*/
 	};
 
 	VkSubpassDependency dependency{
@@ -802,7 +844,7 @@ void VulkanApplication::createVertexBuffer()
 
 
 void VulkanApplication::createCommandBuffer() {
-	
+
 }
 void VulkanApplication::createSyncObjects()
 {

@@ -114,7 +114,6 @@ public:
 
 	VkCommandPool commandPool;
 
-
 	SwapChainSupportDetails swapChainSupport;
 	QueueFamilyIndices indices;
 
@@ -130,8 +129,10 @@ public:
 
 	virtual void run();
 	virtual void cleanup();
-
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 	static std::vector<char> readFile(const std::string& filename);
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
