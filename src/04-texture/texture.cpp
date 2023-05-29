@@ -653,6 +653,9 @@ void TextureApplication::cleanup()
 		vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
 	}
 
+	vkDestroyImage(device, textureImage, nullptr);
+	vkFreeMemory(device, textureImageMemory, nullptr);
+
 	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
 
