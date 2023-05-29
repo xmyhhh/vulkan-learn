@@ -19,7 +19,10 @@ private:
 	VkDeviceMemory vertexBufferMemory;
 	VkBuffer indexBuffer;
 	VkDeviceMemory indexBufferMemory;
-
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	VkFence inFlightFence;
+	VkCommandBuffer commandBuffer;
 	void drawFrame();
 
 	void mainLoop();
@@ -32,5 +35,9 @@ private:
 
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
+	void createCommandBuffer();
+
 	void cleanup();
+
+	void createSyncObjects();
 };

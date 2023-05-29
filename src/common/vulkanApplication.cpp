@@ -243,9 +243,9 @@ void VulkanApplication::run()
 
 void VulkanApplication::cleanup()
 {
-	vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
-	vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
-	vkDestroyFence(device, inFlightFence, nullptr);
+	cleanupSwapChain();
+
+
 
 	vkDestroyCommandPool(device, commandPool, nullptr);
 
@@ -371,13 +371,21 @@ void VulkanApplication::initVulkan()
 	createLogicalDevice();
 	createSwapChain();       //创建VkSwapchainKHR swapChain; 并从swapChain拿到所有VkImage放入std::vector<VkImage> swapChainImages;
 	createImageViews();      //创建std::vector<VkImageView> swapChainImageViews并和std::vector<VkImage> swapChainImages;建立一对一关联
+	
 	createRenderPass();
+	createDescriptorSetLayout();
 	createGraphicsPipeline();
 	createFramebuffers();
 	createCommandPool();
+
 	createIndexBuffer();
+	createUniformBuffers();
 	createVertexBuffer();
 	createCommandBuffer();
+
+	createDescriptorPool();
+	createDescriptorSets();
+
 	createSyncObjects();
 }
 
@@ -727,9 +735,57 @@ void VulkanApplication::createCommandPool() {
 	}
 }
 
+void VulkanApplication::recreateSwapChain()
+{
+	int width = 0, height = 0;
+	glfwGetFramebufferSize(window, &width, &height);
+	while (width == 0 || height == 0) {
+		glfwGetFramebufferSize(window, &width, &height);
+		glfwWaitEvents();
+	}
+
+	vkDeviceWaitIdle(device);
+
+	cleanupSwapChain();
+
+	createSwapChain();
+	createImageViews();
+	createFramebuffers();
+}
+
+void VulkanApplication::createDescriptorSetLayout()
+{
+}
+
+void VulkanApplication::createUniformBuffers()
+{
+
+}
+
+void VulkanApplication::cleanupSwapChain()
+{
+	for (auto framebuffer : swapChainFramebuffers) {
+		vkDestroyFramebuffer(device, framebuffer, nullptr);
+	}
+
+	for (auto imageView : swapChainImageViews) {
+		vkDestroyImageView(device, imageView, nullptr);
+	}
+
+	vkDestroySwapchainKHR(device, swapChain, nullptr);
+}
+
 void VulkanApplication::createIndexBuffer()
 {
 
+}
+
+void VulkanApplication::createDescriptorPool()
+{
+}
+
+void VulkanApplication::createDescriptorSets()
+{
 }
 
 void VulkanApplication::createVertexBuffer()
@@ -739,32 +795,11 @@ void VulkanApplication::createVertexBuffer()
 
 
 void VulkanApplication::createCommandBuffer() {
-	VkCommandBufferAllocateInfo allocInfo{
-		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-		.commandPool = commandPool,
-		.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-		.commandBufferCount = 1,
-	};
-
-	if (vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer) != VK_SUCCESS) {
-		throw std::runtime_error("failed to allocate command buffers!");
-	}
+	
 }
 void VulkanApplication::createSyncObjects()
 {
-	VkSemaphoreCreateInfo semaphoreInfo{
-		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
-	};
-	VkFenceCreateInfo fenceInfo{
-		.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-		.flags = VK_FENCE_CREATE_SIGNALED_BIT,
-	};
 
-	if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphore) != VK_SUCCESS ||
-		vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphore) != VK_SUCCESS ||
-		vkCreateFence(device, &fenceInfo, nullptr, &inFlightFence) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create semaphores!");
-	}
 }
 
 void VulkanApplication::initWindow()

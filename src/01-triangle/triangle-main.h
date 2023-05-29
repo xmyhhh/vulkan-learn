@@ -7,6 +7,13 @@ public:
 
 
 private:
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	VkFence inFlightFence;
+	VkCommandBuffer commandBuffer;
+
+	void createCommandBuffer();
+
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void drawFrame();
@@ -15,5 +22,5 @@ private:
 
 	void createGraphicsPipeline();
 
-	
+	void createSyncObjects();
 };

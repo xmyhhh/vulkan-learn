@@ -1,8 +1,29 @@
 #pragma once
 #include "../common/VulkanApplication.h"
+
+struct UniformBufferObject {
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 proj;
+};
+
 class UBOApplication :public VulkanApplication {
-public :
+public:
 	void run();
+	VkDescriptorSetLayout descriptorSetLayout;
+	VkPipelineLayout pipelineLayout;
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+	std::vector<void*> uniformBuffersMapped;
+
+	std::vector<VkCommandBuffer> commandBuffers;
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	VkDescriptorPool descriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;
+
+	uint32_t currentFrame = 0;
 private:
 	const std::vector<Vertex> vertices = {
 		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
@@ -31,6 +52,20 @@ private:
 	void createIndexBuffer();
 
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+	void createDescriptorSetLayout();
+
+	void createUniformBuffers();
+
+	void updateUniformBuffer(uint32_t currentImage);
+
+	void createCommandBuffer();
+
+	void createSyncObjects();
+
+	void createDescriptorPool();
+
+	void createDescriptorSets();
 
 	void cleanup();
 };

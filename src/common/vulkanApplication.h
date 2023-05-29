@@ -13,7 +13,7 @@
 #include <fstream>
 #include <string>
 #include <array>
-
+const int MAX_FRAMES_IN_FLIGHT = 2;
 struct Vertex {
 	glm::vec2 pos;
 	glm::vec3 color;
@@ -112,11 +112,7 @@ public:
 	VkPipeline graphicsPipeline;
 
 	VkCommandPool commandPool;
-	VkCommandBuffer commandBuffer;
 
-	VkSemaphore imageAvailableSemaphore;
-	VkSemaphore renderFinishedSemaphore;
-	VkFence inFlightFence;
 
 	SwapChainSupportDetails swapChainSupport;
 	QueueFamilyIndices indices;
@@ -140,8 +136,10 @@ public:
 	VkShaderModule createShaderModule(const std::vector<char>& code);
 
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	virtual void createSyncObjects();
+	void recreateSwapChain();
 
-
+	bool framebufferResized = false;
 private:
 	const uint32_t WIDTH = 800;
 	const uint32_t HEIGHT = 600;
@@ -175,9 +173,13 @@ private:
 
 	void createCommandPool();
 
-	void createCommandBuffer();
+	void cleanupSwapChain();
 
-	void createSyncObjects();
+	virtual void createCommandBuffer();
+
+	virtual void createUniformBuffers();
+
+	virtual void createDescriptorSetLayout();
 
 	virtual void createRenderPass();
 
@@ -188,6 +190,10 @@ private:
 	virtual void createIndexBuffer();
 
 	virtual void createVertexBuffer();
+
+	virtual void createDescriptorPool();
+
+	virtual void createDescriptorSets();
 
 	virtual void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) = 0;
 };
