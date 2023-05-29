@@ -2,13 +2,15 @@
 #include "src/01-triangle/triangle-main.h"
 #include "src/02-vertex buffer/vertex-main.h"
 #include "src/03-uniform buffer/UBO-main.h"
+#include "src/04-texture/texture-main.h"
 int main()
 {
 	std::cout << "Hello World!\n";
 
 	//TriangleApplication app;
 	//VertexApplication app;
-	UBOApplication app;
+	//UBOApplication app;
+	TextureApplication app;
 	try {
 		app.run();
 	}

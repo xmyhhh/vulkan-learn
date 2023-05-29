@@ -378,6 +378,8 @@ void VulkanApplication::initVulkan()
 	createFramebuffers();
 	createCommandPool();
 
+	createTextureImage();
+
 	createIndexBuffer();
 	createUniformBuffers();
 	createVertexBuffer();
@@ -751,6 +753,11 @@ void VulkanApplication::recreateSwapChain()
 	createSwapChain();
 	createImageViews();
 	createFramebuffers();
+}
+
+void VulkanApplication::createTextureImage()
+{
+
 }
 
 void VulkanApplication::createDescriptorSetLayout()

@@ -34,6 +34,15 @@
     <Filter Include="源文件\03-uniform buffer\shader">
       <UniqueIdentifier>{d453f233-7ab5-48dd-837b-cdeeecb0f12b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\04-texture">
+      <UniqueIdentifier>{52f02b85-85ff-4a8d-82ab-c78d6e5e4e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\04-texture\shader">
+      <UniqueIdentifier>{8d29f722-0679-4950-ac86-59e1933a12d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\04-texture\texture">
+      <UniqueIdentifier>{94c700d1-6bb4-4a23-815b-24243fdd9947}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -51,6 +60,9 @@
     <ClCompile Include="src\03-uniform buffer\UBO-main.cpp">
       <Filter>源文件\03-uniform buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\04-texture\texture.cpp">
+      <Filter>源文件\04-texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -64,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="src\03-uniform buffer\UBO-main.h">
       <Filter>源文件\03-uniform buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\04-texture\texture-main.h">
+      <Filter>源文件\04-texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,5 +103,16 @@
     <None Include="src\03-uniform buffer\shader\shader.vert">
       <Filter>源文件\03-uniform buffer\shader</Filter>
     </None>
+    <None Include="src\04-texture\shader\shader.frag">
+      <Filter>源文件\04-texture\shader</Filter>
+    </None>
+    <None Include="src\04-texture\shader\shader.vert">
+      <Filter>源文件\04-texture\shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\04-texture\texture\texture.jpg">
+      <Filter>源文件\04-texture\texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>

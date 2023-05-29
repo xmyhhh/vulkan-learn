@@ -1,13 +1,14 @@
 #pragma once
 #include "../common/VulkanApplication.h"
 
-struct UniformBufferObject {
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 proj;
-};
+
 
 class UBOApplication :public VulkanApplication {
+	struct UniformBufferObject {
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+	};
 public:
 	void run();
 	VkDescriptorSetLayout descriptorSetLayout;

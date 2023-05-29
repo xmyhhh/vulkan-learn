@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <array>
+#include <chrono>
 const int MAX_FRAMES_IN_FLIGHT = 2;
 struct Vertex {
 	glm::vec2 pos;
@@ -174,6 +175,8 @@ private:
 	void createCommandPool();
 
 	void cleanupSwapChain();
+
+	virtual void createTextureImage();
 
 	virtual void createCommandBuffer();
 
