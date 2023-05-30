@@ -14,6 +14,8 @@
 #include <string>
 #include <array>
 #include <chrono>
+#include <unordered_map>
+#include <map>
 const int MAX_FRAMES_IN_FLIGHT = 2;
 struct Vertex2D {
 	glm::vec2 pos;
@@ -82,6 +84,10 @@ struct Vertex3D {
 	glm::vec3 pos;
 	glm::vec3 color;
 	glm::vec2 texCoord;
+
+	bool operator==(const Vertex3D& other) const {
+		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+	}
 
 	//对于所有顶点数据的表述
 	static VkVertexInputBindingDescription getBindingDescription() {
@@ -183,11 +189,11 @@ public:
 	VkCommandBuffer beginSingleTimeCommands();
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 	static std::vector<char> readFile(const std::string& filename);
-	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, uint32_t mipLevels = 1);
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
-	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t mipLevels = 1);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	virtual void createSyncObjects();
 	void recreateSwapChain();

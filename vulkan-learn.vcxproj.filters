@@ -52,6 +52,12 @@
     <Filter Include="源文件\06-mesh">
       <UniqueIdentifier>{d837627f-d02b-46ff-a252-3b9e49a74735}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\07-mipmap">
+      <UniqueIdentifier>{70c6947e-b8c4-473b-9cb7-80a4b43b46b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\07-mipmap\shader">
+      <UniqueIdentifier>{1b5b0b3d-1f37-472d-955e-5098b83f2b2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -78,6 +84,9 @@
     <ClCompile Include="src\06-mesh\mesh-main.cpp">
       <Filter>源文件\06-mesh</Filter>
     </ClCompile>
+    <ClCompile Include="src\07-mipmap\mipmap-main.cpp">
+      <Filter>源文件\07-mipmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -100,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="src\06-mesh\mesh-main.h">
       <Filter>源文件\06-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\07-mipmap\mipmap-main.h">
+      <Filter>源文件\07-mipmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +147,12 @@
     </None>
     <None Include="src\05-Depth buffering\shader\shader.vert">
       <Filter>源文件\05-Depth buffering\shader</Filter>
+    </None>
+    <None Include="src\07-mipmap\shader\shader.frag">
+      <Filter>源文件\07-mipmap\shader</Filter>
+    </None>
+    <None Include="src\07-mipmap\shader\shader.vert">
+      <Filter>源文件\07-mipmap\shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
