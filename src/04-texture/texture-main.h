@@ -25,13 +25,16 @@ public:
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
 
+	VkImageView textureImageView;
+	VkSampler textureSampler;
+
 	uint32_t currentFrame = 0;
 private:
 	const std::vector<Vertex> vertices = {
-		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+	{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+	{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+	{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
 	};
 	//It is possible to use either uint16_t or uint32_t, VK_INDEX_TYPE_UINT16 and VK_INDEX_TYPE_UINT32 for index blind
 	const std::vector<uint16_t> indices = {
@@ -77,6 +80,10 @@ private:
 	void createDescriptorSets();
 
 	void createTextureImage();
+
+	void createTextureImageView();
+
+	void createTextureSampler();
 
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 

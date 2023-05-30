@@ -229,7 +229,10 @@ bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface, std::vector
 		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device, surface);
 		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 	}
-	return indices.isComplete() && extensionsSupported && swapChainAdequate;
+	VkPhysicalDeviceFeatures supportedFeatures;
+	vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+
+	return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
 
 
@@ -421,6 +424,8 @@ void VulkanApplication::initVulkan()
 	createCommandPool();
 
 	createTextureImage();
+	createTextureImageView();
+	createTextureSampler();
 
 	createIndexBuffer();
 	createUniformBuffers();
@@ -540,7 +545,7 @@ void VulkanApplication::createLogicalDevice() {
 	}
 
 	VkPhysicalDeviceFeatures deviceFeatures{};
-
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
 	//With the previous two structures in place, we can start filling in the main VkDeviceCreateInfo structure.
 	VkDeviceCreateInfo createInfo{
 		.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
@@ -701,7 +706,6 @@ void VulkanApplication::createRenderPass() {
 		.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
 		.colorAttachmentCount = 1,
 		.pColorAttachments = &colorAttachmentRef,
-
 		/*  VkSubpassDescriptionFlags       flags;
 		  VkPipelineBindPoint             pipelineBindPoint;
 		  uint32_t                        inputAttachmentCount;
@@ -843,12 +847,41 @@ void VulkanApplication::createVertexBuffer()
 }
 
 
+void VulkanApplication::createTextureImageView() {
+
+}
+
 void VulkanApplication::createCommandBuffer() {
 
 }
 void VulkanApplication::createSyncObjects()
 {
 
+}
+
+void VulkanApplication::createTextureSampler() {
+
+}
+
+VkImageView VulkanApplication::createImageView(VkImage image, VkFormat format)
+{
+	VkImageViewCreateInfo viewInfo{};
+	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	viewInfo.image = image;
+	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewInfo.format = format;
+	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	viewInfo.subresourceRange.baseMipLevel = 0;
+	viewInfo.subresourceRange.levelCount = 1;
+	viewInfo.subresourceRange.baseArrayLayer = 0;
+	viewInfo.subresourceRange.layerCount = 1;
+
+	VkImageView imageView;
+	if (vkCreateImageView(device, &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create texture image view!");
+	}
+
+	return imageView;
 }
 
 void VulkanApplication::initWindow()

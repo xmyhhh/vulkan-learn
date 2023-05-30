@@ -18,6 +18,7 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 struct Vertex {
 	glm::vec2 pos;
 	glm::vec3 color;
+	glm::vec2 texCoord;
 
 	//对于所有顶点数据的表述
 	static VkVertexInputBindingDescription getBindingDescription() {
@@ -34,10 +35,10 @@ struct Vertex {
 	}
 
 	//对于单个顶点数据的每个属性表述
-	static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
+	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
 		//An attribute description struct describes how to extract a vertex attribute from a chunk of vertex data originating from a binding description
 		//We have two attributes, position and color, so we need two attribute description structs
-		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
 		{
 			//The binding parameter tells Vulkan from which binding the per-vertex data comes
@@ -67,6 +68,12 @@ struct Vertex {
 			attributeDescriptions[1].offset = offsetof(Vertex, color);
 		}
 
+		{
+			attributeDescriptions[2].binding = 0;
+			attributeDescriptions[2].location = 2;
+			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+		}
 		return attributeDescriptions;
 	}
 };
@@ -136,7 +143,7 @@ public:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
-
+	VkImageView createImageView(VkImage image, VkFormat format);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	virtual void createSyncObjects();
 	void recreateSwapChain();
@@ -176,6 +183,11 @@ private:
 	void createCommandPool();
 
 	void cleanupSwapChain();
+
+
+	virtual void createTextureSampler();
+
+	virtual void createTextureImageView();
 
 	virtual void createTextureImage();
 
