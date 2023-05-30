@@ -420,10 +420,12 @@ void VulkanApplication::initVulkan()
 	createRenderPass();
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
+	createCommandPool();     //createDepthResources will use CommandPool
+	createDepthResources(); // Framebuffers will use DepthResources
 	createFramebuffers();
-	createCommandPool();
+	
 
-	createDepthResources();
+	
 
 	createTextureImage();
 	createTextureImageView();

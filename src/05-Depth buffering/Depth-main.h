@@ -97,6 +97,10 @@ private:
 
 	void createDepthResources();
 
+	void createRenderPass();
+
+	void createFramebuffers();
+
 	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
