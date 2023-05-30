@@ -43,6 +43,12 @@
     <Filter Include="源文件\04-texture\texture">
       <UniqueIdentifier>{94c700d1-6bb4-4a23-815b-24243fdd9947}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\05-Depth buffering">
+      <UniqueIdentifier>{9e16f256-04c8-4970-b56e-93090e993788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\05-Depth buffering\shader">
+      <UniqueIdentifier>{d5b660f6-f366-43e8-af73-7ce2db3c1afb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -63,6 +69,9 @@
     <ClCompile Include="src\04-texture\texture.cpp">
       <Filter>源文件\04-texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\05-Depth buffering\Depth-main.cpp">
+      <Filter>源文件\05-Depth buffering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -79,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="src\04-texture\texture-main.h">
       <Filter>源文件\04-texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\05-Depth buffering\Depth-main.h">
+      <Filter>源文件\05-Depth buffering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +120,12 @@
     </None>
     <None Include="src\04-texture\shader\shader.vert">
       <Filter>源文件\04-texture\shader</Filter>
+    </None>
+    <None Include="src\05-Depth buffering\shader\shader.frag">
+      <Filter>源文件\05-Depth buffering\shader</Filter>
+    </None>
+    <None Include="src\05-Depth buffering\shader\shader.vert">
+      <Filter>源文件\05-Depth buffering\shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
