@@ -4,7 +4,7 @@ class VertexApplication :public VulkanApplication {
 public :
 	void run();
 private:
-	const std::vector<Vertex> vertices = {
+	const std::vector<Vertex2D> vertices = {
 		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
 		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},

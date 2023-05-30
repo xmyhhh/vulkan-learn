@@ -15,7 +15,7 @@
 #include <array>
 #include <chrono>
 const int MAX_FRAMES_IN_FLIGHT = 2;
-struct Vertex {
+struct Vertex2D {
 	glm::vec2 pos;
 	glm::vec3 color;
 	glm::vec2 texCoord;
@@ -26,7 +26,7 @@ struct Vertex {
 			//binding参数指定绑定数组中绑定的索引
 			.binding = 0,
 			//步幅参数指定从一个条目到下一个条目的字节数
-			.stride = sizeof(Vertex),
+			.stride = sizeof(Vertex2D),
 			//VK_VERTEX_INPUT_RATE_VERTEX: Move to the next data entry after each vertex
 			//VK_VERTEX_INPUT_RATE_INSTANCE : Move to the next data entry after each instance
 			.inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
@@ -58,25 +58,69 @@ struct Vertex {
 
 			//The format parameter implicitly defines the byte size of attribute data
 			//The offset parameter specifies the number of bytes since the start of the per - vertex data to read from.
-			attributeDescriptions[0].offset = offsetof(Vertex, pos);
+			attributeDescriptions[0].offset = offsetof(Vertex2D, pos);
 		}
 
 		{
 			attributeDescriptions[1].binding = 0;
 			attributeDescriptions[1].location = 1;
 			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[1].offset = offsetof(Vertex, color);
+			attributeDescriptions[1].offset = offsetof(Vertex2D, color);
 		}
 
 		{
 			attributeDescriptions[2].binding = 0;
 			attributeDescriptions[2].location = 2;
 			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-			attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+			attributeDescriptions[2].offset = offsetof(Vertex2D, texCoord);
 		}
 		return attributeDescriptions;
 	}
 };
+
+struct Vertex3D {
+	glm::vec3 pos;
+	glm::vec3 color;
+	glm::vec2 texCoord;
+
+	//对于所有顶点数据的表述
+	static VkVertexInputBindingDescription getBindingDescription() {
+		VkVertexInputBindingDescription bindingDescription{
+			.binding = 0,
+			.stride = sizeof(Vertex3D),
+			.inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
+		};
+		return bindingDescription;
+	}
+
+	//对于单个顶点数据的每个属性表述
+	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
+	
+		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+		{
+			attributeDescriptions[0].binding = 0;
+			attributeDescriptions[0].location = 0;
+			attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescriptions[0].offset = offsetof(Vertex3D, pos);
+		}
+
+		{
+			attributeDescriptions[1].binding = 0;
+			attributeDescriptions[1].location = 1;
+			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescriptions[1].offset = offsetof(Vertex3D, color);
+		}
+
+		{
+			attributeDescriptions[2].binding = 0;
+			attributeDescriptions[2].location = 2;
+			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[2].offset = offsetof(Vertex3D, texCoord);
+		}
+		return attributeDescriptions;
+	}
+};
+
 
 struct SwapChainSupportDetails {
 	VkSurfaceCapabilitiesKHR capabilities;

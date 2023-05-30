@@ -95,8 +95,8 @@ void UBOApplication::mainLoop()
 
 void UBOApplication::createGraphicsPipeline()
 {
-	auto bindingDescription = Vertex::getBindingDescription();
-	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+	auto bindingDescription = Vertex2D::getBindingDescription();
+	auto attributeDescriptions = Vertex2D::getAttributeDescriptions();
 
 	auto vertShaderCode = readFile("src/03-uniform buffer/shader/vert.spv");
 	auto fragShaderCode = readFile("src/03-uniform buffer/shader/frag.spv");

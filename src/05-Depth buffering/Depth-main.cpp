@@ -96,11 +96,11 @@ void DepthApplication::mainLoop()
 
 void DepthApplication::createGraphicsPipeline()
 {
-	auto bindingDescription = Vertex::getBindingDescription();
-	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+	auto bindingDescription = Vertex3D::getBindingDescription();
+	auto attributeDescriptions = Vertex3D::getAttributeDescriptions();
 
-	auto vertShaderCode = readFile("src/04-texture/shader/vert.spv");
-	auto fragShaderCode = readFile("src/04-texture/shader/frag.spv");
+	auto vertShaderCode = readFile("src/05-Depth buffering/shader/vert.spv");
+	auto fragShaderCode = readFile("src/05-Depth buffering/shader/frag.spv");
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

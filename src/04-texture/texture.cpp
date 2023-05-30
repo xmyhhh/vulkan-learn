@@ -96,8 +96,8 @@ void TextureApplication::mainLoop()
 
 void TextureApplication::createGraphicsPipeline()
 {
-	auto bindingDescription = Vertex::getBindingDescription();
-	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+	auto bindingDescription = Vertex2D::getBindingDescription();
+	auto attributeDescriptions = Vertex2D::getAttributeDescriptions();
 
 	auto vertShaderCode = readFile("src/04-texture/shader/vert.spv");
 	auto fragShaderCode = readFile("src/04-texture/shader/frag.spv");
