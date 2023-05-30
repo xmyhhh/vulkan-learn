@@ -58,6 +58,12 @@
     <Filter Include="源文件\07-mipmap\shader">
       <UniqueIdentifier>{1b5b0b3d-1f37-472d-955e-5098b83f2b2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\08-Multisampling">
+      <UniqueIdentifier>{ef17edf8-d3c5-446f-bb81-6c00ae134f58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\08-Multisampling\shader">
+      <UniqueIdentifier>{6b38a522-3c01-40b9-ab3e-c40bbf935f51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -87,6 +93,9 @@
     <ClCompile Include="src\07-mipmap\mipmap-main.cpp">
       <Filter>源文件\07-mipmap</Filter>
     </ClCompile>
+    <ClCompile Include="src\08-Multisampling\multisampling-main.cpp">
+      <Filter>源文件\08-Multisampling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -112,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="src\07-mipmap\mipmap-main.h">
       <Filter>源文件\07-mipmap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\08-Multisampling\multisampling-main.h">
+      <Filter>源文件\08-Multisampling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +165,12 @@
     </None>
     <None Include="src\07-mipmap\shader\shader.vert">
       <Filter>源文件\07-mipmap\shader</Filter>
+    </None>
+    <None Include="src\08-Multisampling\shader\shader.frag">
+      <Filter>源文件\08-Multisampling\shader</Filter>
+    </None>
+    <None Include="src\08-Multisampling\shader\shader.vert">
+      <Filter>源文件\08-Multisampling\shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

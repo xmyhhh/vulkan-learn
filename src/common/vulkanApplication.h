@@ -156,6 +156,7 @@ public:
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 
+	VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
@@ -189,7 +190,7 @@ public:
 	VkCommandBuffer beginSingleTimeCommands();
 	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 	static std::vector<char> readFile(const std::string& filename);
-	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, uint32_t mipLevels = 1);
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, uint32_t mipLevels = 1, VkSampleCountFlagBits numSamples = VK_SAMPLE_COUNT_1_BIT);
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -200,7 +201,7 @@ public:
 	bool hasStencilComponent(VkFormat format) {
 		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 	}
-
+	VkSampleCountFlagBits  getMaxUsableSampleCount();
 	bool framebufferResized = false;
 private:
 	const uint32_t WIDTH = 800;
@@ -237,6 +238,7 @@ private:
 
 	void cleanupSwapChain();
 
+	virtual void createColorResources();
 
 	virtual void createTextureSampler();
 
