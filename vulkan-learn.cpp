@@ -11,8 +11,8 @@ int main()
 	//TriangleApplication app;
 	//VertexApplication app;
 	//UBOApplication app;
-	//TextureApplication app;
-	DepthApplication app;
+	TextureApplication app;
+	//DepthApplication app;
 	try {
 		app.run();
 	}

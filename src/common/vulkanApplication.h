@@ -187,7 +187,7 @@ public:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
-	VkImageView createImageView(VkImage image, VkFormat format);
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	virtual void createSyncObjects();
 	void recreateSwapChain();
@@ -254,6 +254,8 @@ private:
 	virtual void createDescriptorPool();
 
 	virtual void createDescriptorSets();
+
+	virtual void createDepthResources();
 
 	virtual void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) = 0;
 };

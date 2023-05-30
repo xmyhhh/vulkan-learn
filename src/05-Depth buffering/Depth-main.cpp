@@ -4,11 +4,16 @@
 #include <cstdlib>
 #include "depth-main.h"
 #define GLM_FORCE_RADIANS
+//We need to configure it to use the Vulkan range of 0.0 to 1.0
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <stb_image.h>
 
+bool hasStencilComponent(VkFormat format) {
+	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
+}
 
 void DepthApplication::run()
 {
@@ -525,14 +530,14 @@ void DepthApplication::createDescriptorSets()
 		descriptorWrites[1].descriptorCount = 1;
 		descriptorWrites[1].pImageInfo = &imageInfo;
 
-	/*	VkWriteDescriptorSet descriptorWrite{};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets[i];
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;*/
+		/*	VkWriteDescriptorSet descriptorWrite{};
+			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrite.dstSet = descriptorSets[i];
+			descriptorWrite.dstBinding = 0;
+			descriptorWrite.dstArrayElement = 0;
+			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrite.descriptorCount = 1;
+			descriptorWrite.pBufferInfo = &bufferInfo;*/
 
 		vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 
@@ -566,10 +571,10 @@ void DepthApplication::createTextureImage()
 		texWidth,
 		texHeight,
 		VK_FORMAT_R8G8B8A8_SRGB,
-		VK_IMAGE_TILING_OPTIMAL, 
-		VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
-		textureImage, 
+		VK_IMAGE_TILING_OPTIMAL,
+		VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+		textureImage,
 		textureImageMemory
 	);
 	transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
@@ -620,6 +625,38 @@ void DepthApplication::createTextureSampler()
 	}
 }
 
+void DepthApplication::createDepthResources()
+{
+	VkFormat depthFormat = findDepthFormat();
+
+	createImage(swapChainExtent.width, swapChainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+	depthImageView = createImageView(depthImage, depthFormat);
+}
+
+VkFormat DepthApplication::findDepthFormat() {
+	return findSupportedFormat(
+		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+		VK_IMAGE_TILING_OPTIMAL,
+		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+	);
+}
+
+VkFormat DepthApplication::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+	for (VkFormat format : candidates) {
+		VkFormatProperties props;
+		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
+
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
+			return format;
+		}
+		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
+			return format;
+		}
+	}
+
+	throw std::runtime_error("failed to find supported format!");
+}
+
 void DepthApplication::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
 {
 	//One of the most common ways to perform layout transitions is using an image memory barrier.
@@ -647,7 +684,7 @@ void DepthApplication::transitionImageLayout(VkImage image, VkFormat format, VkI
 
 	/*There are two transitions we need to handle :
 		Undefined ¡ú transfer destination : transfer writes that don't need to wait on anything
-		Transfer destination ¡ú shader reading : shader reads should wait on transfer writes, specifically the shader reads in the fragment shader, 
+		Transfer destination ¡ú shader reading : shader reads should wait on transfer writes, specifically the shader reads in the fragment shader,
 			because that's where we're going to use the texture
 	*/
 	if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
@@ -707,7 +744,7 @@ void DepthApplication::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_
 		height,
 		1
 	};
-	
+
 	vkCmdCopyBufferToImage(
 		commandBuffer,
 		buffer,
