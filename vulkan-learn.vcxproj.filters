@@ -49,6 +49,9 @@
     <Filter Include="源文件\05-Depth buffering\shader">
       <UniqueIdentifier>{d5b660f6-f366-43e8-af73-7ce2db3c1afb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\06-mesh">
+      <UniqueIdentifier>{d837627f-d02b-46ff-a252-3b9e49a74735}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vulkan-learn.cpp">
@@ -72,6 +75,9 @@
     <ClCompile Include="src\05-Depth buffering\Depth-main.cpp">
       <Filter>源文件\05-Depth buffering</Filter>
     </ClCompile>
+    <ClCompile Include="src\06-mesh\mesh-main.cpp">
+      <Filter>源文件\06-mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01-triangle\triangle-main.h">
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="src\05-Depth buffering\Depth-main.h">
       <Filter>源文件\05-Depth buffering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\06-mesh\mesh-main.h">
+      <Filter>源文件\06-mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

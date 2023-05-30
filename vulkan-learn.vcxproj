@@ -148,6 +148,7 @@
     <ClCompile Include="src\03-uniform buffer\UBO-main.cpp" />
     <ClCompile Include="src\04-texture\texture.cpp" />
     <ClCompile Include="src\05-Depth buffering\Depth-main.cpp" />
+    <ClCompile Include="src\06-mesh\mesh-main.cpp" />
     <ClCompile Include="src\common\vulkanApplication.cpp" />
     <ClCompile Include="vulkan-learn.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="src\03-uniform buffer\UBO-main.h" />
     <ClInclude Include="src\04-texture\texture-main.h" />
     <ClInclude Include="src\05-Depth buffering\Depth-main.h" />
+    <ClInclude Include="src\06-mesh\mesh-main.h" />
     <ClInclude Include="src\common\vulkanApplication.h" />
   </ItemGroup>
   <ItemGroup>

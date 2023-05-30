@@ -2,7 +2,11 @@
 
 #include <stdexcept>
 #include <cstdlib>
-#include "depth-main.h"
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
+#include "mesh-main.h"
 #define GLM_FORCE_RADIANS
 //We need to configure it to use the Vulkan range of 0.0 to 1.0
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -12,16 +16,53 @@
 #include <stb_image.h>
 
 
-
-void DepthApplication::run()
+void MeshApplication::run()
 {
+	loadModel();
 	this->VulkanApplication::run();
 	std::cout << "TriangleApplication run" << std::endl;
 	mainLoop();
 	cleanup();
 }
 
-void DepthApplication::drawFrame()
+void MeshApplication::loadModel() {
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string warn, err;
+
+
+
+	
+
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())) {
+		throw std::runtime_error(warn + err);
+	}
+
+	for (const auto& shape : shapes) {
+		for (const auto& index : shape.mesh.indices) {
+			Vertex3D vertex{};
+
+			vertex.pos = {
+				attrib.vertices[3 * index.vertex_index + 0],
+				attrib.vertices[3 * index.vertex_index + 1],
+				attrib.vertices[3 * index.vertex_index + 2]
+			};
+
+			vertex.texCoord = {
+				attrib.texcoords[2 * index.texcoord_index + 0],
+				attrib.texcoords[2 * index.texcoord_index + 1]
+			};
+
+			vertex.color = { 1.0f, 1.0f, 1.0f };
+
+			vertices.push_back(vertex);
+			indices.push_back(indices.size());
+		}
+	}
+}
+
+void MeshApplication::drawFrame()
 {
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 	//After waiting, we need to manually reset the fence to the unsignaled state
@@ -87,7 +128,7 @@ void DepthApplication::drawFrame()
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void DepthApplication::mainLoop()
+void MeshApplication::mainLoop()
 {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -97,7 +138,7 @@ void DepthApplication::mainLoop()
 	vkDeviceWaitIdle(device);
 }
 
-void DepthApplication::createGraphicsPipeline()
+void MeshApplication::createGraphicsPipeline()
 {
 	auto bindingDescription = Vertex3D::getBindingDescription();
 	auto attributeDescriptions = Vertex3D::getAttributeDescriptions();
@@ -267,7 +308,7 @@ void DepthApplication::createGraphicsPipeline()
 	vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
 
-void DepthApplication::createVertexBuffer()
+void MeshApplication::createVertexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -286,7 +327,7 @@ void DepthApplication::createVertexBuffer()
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void DepthApplication::createIndexBuffer()
+void MeshApplication::createIndexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
@@ -308,7 +349,7 @@ void DepthApplication::createIndexBuffer()
 
 }
 
-void DepthApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
+void MeshApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {
 	//If the command buffer was already recorded once, 
 	//then a call to vkBeginCommandBuffer will implicitly reset it. 
@@ -360,9 +401,9 @@ void DepthApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32
 		VkBuffer vertexBuffers[] = { vertexBuffer };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-
-		vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 	}
 	vkCmdEndRenderPass(commandBuffer);
@@ -373,7 +414,7 @@ void DepthApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32
 
 }
 
-void DepthApplication::createDescriptorSetLayout()
+void MeshApplication::createDescriptorSetLayout()
 {
 	VkDescriptorSetLayoutBinding samplerLayoutBinding{};
 	samplerLayoutBinding.binding = 1;
@@ -403,7 +444,7 @@ void DepthApplication::createDescriptorSetLayout()
 	}
 }
 
-void DepthApplication::createUniformBuffers()
+void MeshApplication::createUniformBuffers()
 {
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -417,7 +458,7 @@ void DepthApplication::createUniformBuffers()
 	}
 }
 
-void DepthApplication::updateUniformBuffer(uint32_t currentImage)
+void MeshApplication::updateUniformBuffer(uint32_t currentImage)
 {
 	static auto startTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = std::chrono::high_resolution_clock::now();
@@ -431,7 +472,7 @@ void DepthApplication::updateUniformBuffer(uint32_t currentImage)
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
 
-void DepthApplication::createCommandBuffer()
+void MeshApplication::createCommandBuffer()
 {
 	commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
@@ -446,7 +487,7 @@ void DepthApplication::createCommandBuffer()
 	}
 }
 
-void DepthApplication::createSyncObjects()
+void MeshApplication::createSyncObjects()
 {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -468,7 +509,7 @@ void DepthApplication::createSyncObjects()
 	}
 }
 
-void DepthApplication::createDescriptorPool()
+void MeshApplication::createDescriptorPool()
 {
 	//VkDescriptorPoolSize poolSize{
 	//	.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -500,7 +541,7 @@ void DepthApplication::createDescriptorPool()
 	}
 }
 
-void DepthApplication::createDescriptorSets()
+void MeshApplication::createDescriptorSets()
 {
 	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocInfo{
@@ -562,10 +603,10 @@ void DepthApplication::createDescriptorSets()
 
 }
 
-void DepthApplication::createTextureImage()
+void MeshApplication::createTextureImage()
 {
 	int texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load("src/04-texture/texture/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 
 	if (!pixels) {
@@ -604,12 +645,12 @@ void DepthApplication::createTextureImage()
 
 }
 
-void DepthApplication::createTextureImageView()
+void MeshApplication::createTextureImageView()
 {
 	textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB);
 }
 
-void DepthApplication::createTextureSampler()
+void MeshApplication::createTextureSampler()
 {
 	VkSamplerCreateInfo samplerInfo{};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -641,7 +682,7 @@ void DepthApplication::createTextureSampler()
 	}
 }
 
-void DepthApplication::createDepthResources()
+void MeshApplication::createDepthResources()
 {
 	VkFormat depthFormat = findDepthFormat();
 
@@ -651,7 +692,7 @@ void DepthApplication::createDepthResources()
 	transitionImageLayout(depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 }
 
-void DepthApplication::createRenderPass()
+void MeshApplication::createRenderPass()
 {
 	VkAttachmentDescription depthAttachment{
 		.format = findDepthFormat(),
@@ -737,7 +778,7 @@ void DepthApplication::createRenderPass()
 	}
 }
 
-void DepthApplication::createFramebuffers()
+void MeshApplication::createFramebuffers()
 {
 	//Start by resizing the container to hold all of the framebuffers
 	swapChainFramebuffers.resize(swapChainImageViews.size());
@@ -766,7 +807,7 @@ void DepthApplication::createFramebuffers()
 	}
 }
 
-VkFormat DepthApplication::findDepthFormat() {
+VkFormat MeshApplication::findDepthFormat() {
 	return findSupportedFormat(
 		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 		VK_IMAGE_TILING_OPTIMAL,
@@ -774,7 +815,7 @@ VkFormat DepthApplication::findDepthFormat() {
 	);
 }
 
-VkFormat DepthApplication::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+VkFormat MeshApplication::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 	for (VkFormat format : candidates) {
 		VkFormatProperties props;
 		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
@@ -790,7 +831,7 @@ VkFormat DepthApplication::findSupportedFormat(const std::vector<VkFormat>& cand
 	throw std::runtime_error("failed to find supported format!");
 }
 
-void DepthApplication::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+void MeshApplication::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
 {
 	//One of the most common ways to perform layout transitions is using an image memory barrier.
 	//A pipeline barrier like that is generally used to synchronize access to resources, 
@@ -869,7 +910,7 @@ void DepthApplication::transitionImageLayout(VkImage image, VkFormat format, VkI
 	endSingleTimeCommands(commandBuffer);
 }
 
-void DepthApplication::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+void MeshApplication::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 {
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -908,7 +949,7 @@ void DepthApplication::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_
 	endSingleTimeCommands(commandBuffer);
 }
 
-void DepthApplication::cleanup()
+void MeshApplication::cleanup()
 {
 
 	this->VulkanApplication::cleanup();

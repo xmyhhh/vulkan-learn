@@ -4,6 +4,7 @@
 #include "src/03-uniform buffer/UBO-main.h"
 #include "src/04-texture/texture-main.h"
 #include "src/05-Depth buffering/Depth-main.h"
+#include "src/06-mesh/mesh-main.h"
 int main()
 {
 	std::cout << "Hello World!\n";
@@ -12,7 +13,8 @@ int main()
 	//VertexApplication app;
 	//UBOApplication app;
 	//TextureApplication app;
-	DepthApplication app;
+	//DepthApplication app;
+	MeshApplication app;
 	try {
 		app.run();
 	}
