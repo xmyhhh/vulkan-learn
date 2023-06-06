@@ -697,30 +697,19 @@ void DepthApplication::createRenderPass()
 		.colorAttachmentCount = 1,
 		.pColorAttachments = &colorAttachmentRef,
 		.pDepthStencilAttachment = &depthAttachmentRef,
-		/*  VkSubpassDescriptionFlags       flags;
-		  VkPipelineBindPoint             pipelineBindPoint;
-		  uint32_t                        inputAttachmentCount;
-		  const VkAttachmentReference* pInputAttachments;
-		  uint32_t                        colorAttachmentCount;
-		  const VkAttachmentReference* pColorAttachments;
-		  const VkAttachmentReference* pResolveAttachments;
-		  const VkAttachmentReference* pDepthStencilAttachment;
-		  uint32_t                        preserveAttachmentCount;
-		  const uint32_t* pPreserveAttachments;*/
+
 	};
 
 	VkSubpassDependency dependency{
 		.srcSubpass = VK_SUBPASS_EXTERNAL,
 		.dstSubpass = 0,
-		//.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 		.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
 		.srcAccessMask = 0,
-		//.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
 		.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
 	};
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 
-	std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
+	std::array<VkAttachmentDescription, 2> attachments = { colorAttachment,depthAttachment }; //这个顺序是一定的
 
 	VkRenderPassCreateInfo renderPassInfo{
 		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
@@ -744,7 +733,7 @@ void DepthApplication::createFramebuffers()
 
 	//then iterate through the image views and create framebuffers from them
 	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
-		std::array<VkImageView, 2> attachments = {
+		std::array<VkImageView, 2> attachments = { //这个顺序是一定的
 			swapChainImageViews[i],
 			depthImageView
 		};
