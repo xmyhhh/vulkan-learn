@@ -6,7 +6,7 @@
 
 void TriangleApplication::run()
 {
-	this->VulkanApplication::run();
+	VulkanApplication::run();
 	std::cout << "TriangleApplication run" << std::endl;
 	mainLoop();
 	cleanup();

@@ -425,9 +425,6 @@ void VulkanApplication::initVulkan()
 	createDepthResources(); // Framebuffers will use DepthResources
 	createFramebuffers();
 
-
-
-
 	createTextureImage();
 	createTextureImageView();
 	createTextureSampler();
