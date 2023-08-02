@@ -16,7 +16,7 @@ void TriangleApplication::run()
 void TriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
 	//If the command buffer was already recorded once, 
 	//then a call to vkBeginCommandBuffer will implicitly reset it. 
-	//It's not possible to append commands to a buffer at a later time. vkBeginCommandBuffer������CommandBuffer
+	//It's not possible to append commands to a buffer at a later time. vkBeginCommandBuffer锟斤拷锟斤拷锟斤拷CommandBuffer
 	VkCommandBufferBeginInfo beginInfo{
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		.flags = 0, // Optional
@@ -148,20 +148,20 @@ void TriangleApplication::createGraphicsPipeline()
 
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 
-	/*VkPipelineVertexInputStateCreateInfo�ṹ���������ݸ�������ɫ���Ķ������ݵĸ�ʽ�������������ַ�ʽ��������һ�㣺
-		��Bindings������֮��ļ�࣬�Լ������ǰ����㻹�ǰ�ʵ������μ�ʵ������
-		��������Attribute descriptions�����ݸ�������ɫ�������Ե����ͣ����ĸ��󶨼�����Щ�����Լ�ƫ����
-	��Ϊ����ֱ���ڶ�����ɫ���жԶ������ݽ���Ӳ���룬�������ǽ����˽ṹ��ָ��Ŀǰû��Ҫ���صĶ������ݡ����ǽ��ڶ��㻺����һ���лص���һ�㡣*/
+	/*VkPipelineVertexInputStateCreateInfo锟结构锟斤拷锟斤拷锟斤拷锟斤拷锟捷革拷锟斤拷锟斤拷锟斤拷色锟斤拷锟侥讹拷锟斤拷锟斤拷锟捷的革拷式锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟街凤拷式锟斤拷锟斤拷锟斤拷锟斤拷一锟姐：
+		锟斤拷Bindings锟斤拷锟斤拷锟斤拷之锟斤拷募锟洁，锟皆硷拷锟斤拷锟斤拷锟角帮拷锟斤拷锟姐还锟角帮拷实锟斤拷锟斤拷锟斤拷渭锟绞碉拷锟斤拷锟斤拷锟�
+		锟斤拷锟斤拷锟斤拷锟斤拷Attribute descriptions锟斤拷锟斤拷锟捷革拷锟斤拷锟斤拷锟斤拷色锟斤拷锟斤拷锟斤拷锟皆碉拷锟斤拷锟酵ｏ拷锟斤拷锟侥革拷锟襟定硷拷锟斤拷锟斤拷些锟斤拷锟斤拷锟皆硷拷偏锟斤拷锟斤拷
+	锟斤拷为锟斤拷锟斤拷直锟斤拷锟节讹拷锟斤拷锟斤拷色锟斤拷锟叫对讹拷锟斤拷锟斤拷锟捷斤拷锟斤拷硬锟斤拷锟诫，锟斤拷锟斤拷锟斤拷锟角斤拷锟斤拷锟剿结构锟斤拷指锟斤拷目前没锟斤拷要锟斤拷锟截的讹拷锟斤拷锟斤拷锟捷★拷锟斤拷锟角斤拷锟节讹拷锟姐缓锟斤拷锟斤拷一锟斤拷锟叫回碉拷锟斤拷一锟姐。*/
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
 		.vertexBindingDescriptionCount = 0,
 		.vertexAttributeDescriptionCount = 0,
 	};
 
-	/*VkPipelineInputAssemblyStateCreateInfo�ṹ�����������£�
-		what kind of geometry will be drawn from the vertices��
-		if primitive restart should be enabled��
-	ǰ�������˳�Ա��ָ�������Ծ�������ֵ��
+	/*VkPipelineInputAssemblyStateCreateInfo锟结构锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟铰ｏ拷
+		what kind of geometry will be drawn from the vertices锟斤拷
+		if primitive restart should be enabled锟斤拷
+	前锟斤拷锟斤拷锟斤拷锟剿筹拷员锟斤拷指锟斤拷锟斤拷锟斤拷锟皆撅拷锟斤拷锟斤拷锟斤拷值锟斤拷
 		VK_PRIMITIVE_TOPOLOGY_POINT_LIST: points from vertices
 		VK_PRIMITIVE_TOPOLOGY_LINE_LIST: line from every 2 vertices without reuse
 		VK_PRIMITIVE_TOPOLOGY_LINE_STRIP: the end vertex of every line is used as start vertex for the next line
@@ -180,11 +180,11 @@ void TriangleApplication::createGraphicsPipeline()
 		.scissorCount = 1,
 	};
 
-	/*��դ�����Ӷ�����ɫ���л�ȡ�ɶ�������ļ����壬������ת��ΪƬ������Ƭ����ɫ����ɫ��
-	����ִ����Ȳ��ԡ��沿�޳��ͼ������ԣ����ҿ�������Ϊ��������������λ������Ե��Ƭ�Σ��߿���Ⱦ����*/
+	/*锟斤拷栅锟斤拷锟斤拷锟接讹拷锟斤拷锟斤拷色锟斤拷锟叫伙拷取锟缴讹拷锟斤拷锟斤拷锟斤拷募锟斤拷锟斤拷澹拷锟斤拷锟斤拷锟阶拷锟轿拷锟斤拷锟斤拷锟狡拷锟斤拷锟缴拷锟斤拷锟缴拷锟�
+	锟斤拷锟斤拷执锟斤拷锟斤拷炔锟斤拷浴锟斤拷娌匡拷蕹锟斤拷图锟斤拷锟斤拷锟皆ｏ拷锟斤拷锟揭匡拷锟斤拷锟斤拷锟斤拷为锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷位锟斤拷锟斤拷锟斤拷缘锟斤拷片锟轿ｏ拷锟竭匡拷锟斤拷染锟斤拷锟斤拷*/
 	VkPipelineRasterizationStateCreateInfo rasterizer{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
-		//���depthClampEnable������ΪVK_TRUE����ô�ڽ�ƽ���Զƽ��֮���Ƭ�ν�����ס�������Ƕ������ǡ�
+		//锟斤拷锟絛epthClampEnable锟斤拷锟斤拷锟斤拷为VK_TRUE锟斤拷锟斤拷么锟节斤拷平锟斤拷锟皆镀斤拷锟街拷锟斤拷片锟轿斤拷锟斤拷锟斤拷住锟斤拷锟斤拷锟斤拷锟角讹拷锟斤拷锟斤拷锟角★拷
 		.depthClampEnable = VK_FALSE,
 		.rasterizerDiscardEnable = VK_FALSE,
 		//VK_POLYGON_MODE_FILL: fill the area of the polygon with fragments
@@ -203,10 +203,10 @@ void TriangleApplication::createGraphicsPipeline()
 		.sampleShadingEnable = VK_FALSE,
 	};
 
-	//Ƭ����ɫ��������ɫ����Ҫ������֡���������Ѿ����ڵ���ɫ��ϡ�
-	//����ת������Ϊ��ɫ��ϣ������ַ�������ʵ�֣�
-	//	���¾�ֵ���������������ɫ
-	//	ʹ����λ��������¾�ֵ
+	//片锟斤拷锟斤拷色锟斤拷锟斤拷锟斤拷锟斤拷色锟斤拷锟斤拷要锟斤拷锟斤拷锟斤拷帧锟斤拷锟斤拷锟斤拷锟斤拷锟窖撅拷锟斤拷锟节碉拷锟斤拷色锟斤拷稀锟�
+	//锟斤拷锟斤拷转锟斤拷锟斤拷锟斤拷为锟斤拷色锟斤拷希锟斤拷锟斤拷锟斤拷址锟斤拷锟斤拷锟斤拷锟绞碉拷郑锟�
+	//	锟斤拷锟铰撅拷值锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟缴�
+	//	使锟斤拷锟斤拷位锟斤拷锟斤拷锟斤拷锟斤拷戮锟街�
 	VkPipelineColorBlendAttachmentState colorBlendAttachment{
 		.blendEnable = VK_FALSE,
 		.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,

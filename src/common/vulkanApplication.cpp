@@ -61,12 +61,12 @@ std::vector<const char*> getRequiredExtensions() {
 }
 
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) {
-	//½ö½ö¼ì²é½»»»Á´ÊÇ·ñ¿ÉÓÃÊÇ²»¹»µÄ£¬ÒòÎªËüÊµ¼ÊÉÏ¿ÉÄÜÓëÎÒÃÇµÄ´°¿Ú±íÃæ²»¼æÈİ¡£´´½¨½»»»Á´»¹Éæ¼°±ÈÊµÀıºÍÉè±¸´´½¨¶àµÃ¶àµÄÉèÖÃ£¬
+	//ä»…ä»…æ£€æŸ¥äº¤æ¢é“¾æ˜¯å¦å¯ç”¨æ˜¯ä¸å¤Ÿçš„ï¼Œå› ä¸ºå®ƒå®é™…ä¸Šå¯èƒ½ä¸æˆ‘ä»¬çš„çª—å£è¡¨é¢ä¸å…¼å®¹ã€‚åˆ›å»ºäº¤æ¢é“¾è¿˜æ¶‰åŠæ¯”å®ä¾‹å’Œè®¾å¤‡åˆ›å»ºå¤šå¾—å¤šçš„è®¾ç½®ï¼Œ
 
-	/*ÎÒÃÇ»ù±¾ÉÏĞèÒª¼ì²éÈıÖÖÊôĞÔ£º
-		»ù±¾±íÃæ¹¦ÄÜ£¨½»»»Á´ÖĞÍ¼ÏñµÄ×îĞ¡ / ×î´óÊıÁ¿¡¢Í¼ÏñµÄ×îĞ¡»ò×î´ó¿í¶ÈºÍ¸ß¶È£©
-		ÇúÃæ¸ñÊ½£¨ÏñËØ¸ñÊ½¡¢ÑÕÉ«¿Õ¼ä£©
-		¿ÉÓÃµÄÑİÊ¾Ä£Ê½*/
+	/*æˆ‘ä»¬åŸºæœ¬ä¸Šéœ€è¦æ£€æŸ¥ä¸‰ç§å±æ€§ï¼š
+		åŸºæœ¬è¡¨é¢åŠŸèƒ½ï¼ˆäº¤æ¢é“¾ä¸­å›¾åƒçš„æœ€å° / æœ€å¤§æ•°é‡ã€å›¾åƒçš„æœ€å°æˆ–æœ€å¤§å®½åº¦å’Œé«˜åº¦ï¼‰
+		æ›²é¢æ ¼å¼ï¼ˆåƒç´ æ ¼å¼ã€é¢œè‰²ç©ºé—´ï¼‰
+		å¯ç”¨çš„æ¼”ç¤ºæ¨¡å¼*/
 	SwapChainSupportDetails details;
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
@@ -75,7 +75,7 @@ SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurface
 	vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
 
 	if (formatCount != 0) {
-		//ÇëÈ·±£µ÷ÕûÏòÁ¿µÄ´óĞ¡ÒÔÈİÄÉËùÓĞ¿ÉÓÃµÄ¸ñÊ½¡£
+		//è¯·ç¡®ä¿è°ƒæ•´å‘é‡çš„å¤§å°ä»¥å®¹çº³æ‰€æœ‰å¯ç”¨çš„æ ¼å¼ã€‚
 		details.formats.resize(formatCount);
 		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
 	}
@@ -365,22 +365,22 @@ void VulkanApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDev
 
 void VulkanApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 {
-	//µ±ÉêÇëÒ»¸övkBufferµÄÊ±ºò£¬ËüÖ»ÊÇ¶¨ÒåÁËÒ»¸öÂß¼­ÉÏµÄ¶ÔÏó
-	//ÕæÕıĞèÒª¿ª±ÙÎïÀíÄÚ´æÊ±£¬ĞèÒª¸ù¾İÒª´æ´¢µÄÊÇ¶ÔÏóÀàĞÍÀ´¾ö¶¨¸øÓëËüÊ²Ã´ÑùµÄÄÚ´æ
-	/*Á÷³Ì
-		ÉêÇëÒ»¸öbuffer
-			¶¨ÒåVkBufferCreateInfo£¬¸ø³ösize
-			¶¨ÒåVkBuffer¶ÔÏó£ºÓÃÓÚ¹ÜÀíÒ»¿éGPUÎïÀíÄÚ´æµÄÂß¼­¶ÔÏó
-			µ÷ÓÃvkCreateBuffer
-		»ñÈ¡Õâ¸öbufferµÄÄÚ´æÇëÇóĞÅÏ¢
-			¶¨ÒåVkMemoryRequirements£ºGPUÉÏµÄÎïÀíÄÚ´æÊÇ±»·Ö³É¸÷ÖÖÀàĞÍµÄ£¬´æ´¢ÎÆÀíµÄ£¬´æ´¢VBOµÄ
-			µ÷ÓÃvkGetBufferMemoryRequirements»ñÈ¡info
-		»ñÈ¡·ÖÅäÆ÷ĞÅÏ¢
-			¶¨ÒåVkMemoryAllocateInfo
-			ÉèÖÃallocationSizeºÍmemoryTypeIndex
-			¶¨ÒåVkDeviceMemory¶ÔÏó£º´ú±íÊÇÒ»¿éGPUÉÏµÄÕæÊµÄÚ´æ
-		µ÷ÓÃvkAllocateMemory»ñÈ¡ÄÚ´æ
-		µ÷ÓÃvkBindBufferMemory°ÑVkBuffer¶ÔÏóºÍVkDeviceMemory¶ÔÏó°ó¶¨*/
+	//å½“ç”³è¯·ä¸€ä¸ªvkBufferçš„æ—¶å€™ï¼Œå®ƒåªæ˜¯å®šä¹‰äº†ä¸€ä¸ªé€»è¾‘ä¸Šçš„å¯¹è±¡
+	//çœŸæ­£éœ€è¦å¼€è¾Ÿç‰©ç†å†…å­˜æ—¶ï¼Œéœ€è¦æ ¹æ®è¦å­˜å‚¨çš„æ˜¯å¯¹è±¡ç±»å‹æ¥å†³å®šç»™ä¸å®ƒä»€ä¹ˆæ ·çš„å†…å­˜
+	/*æµç¨‹
+		ç”³è¯·ä¸€ä¸ªbuffer
+			å®šä¹‰VkBufferCreateInfoï¼Œç»™å‡ºsize
+			å®šä¹‰VkBufferå¯¹è±¡ï¼šç”¨äºç®¡ç†ä¸€å—GPUç‰©ç†å†…å­˜çš„é€»è¾‘å¯¹è±¡
+			è°ƒç”¨vkCreateBuffer
+		è·å–è¿™ä¸ªbufferçš„å†…å­˜è¯·æ±‚ä¿¡æ¯
+			å®šä¹‰VkMemoryRequirementsï¼šGPUä¸Šçš„ç‰©ç†å†…å­˜æ˜¯è¢«åˆ†æˆå„ç§ç±»å‹çš„ï¼Œå­˜å‚¨çº¹ç†çš„ï¼Œå­˜å‚¨VBOçš„
+			è°ƒç”¨vkGetBufferMemoryRequirementsè·å–info
+		è·å–åˆ†é…å™¨ä¿¡æ¯
+			å®šä¹‰VkMemoryAllocateInfo
+			è®¾ç½®allocationSizeå’ŒmemoryTypeIndex
+			å®šä¹‰VkDeviceMemoryå¯¹è±¡ï¼šä»£è¡¨æ˜¯ä¸€å—GPUä¸Šçš„çœŸå®å†…å­˜
+		è°ƒç”¨vkAllocateMemoryè·å–å†…å­˜
+		è°ƒç”¨vkBindBufferMemoryæŠŠVkBufferå¯¹è±¡å’ŒVkDeviceMemoryå¯¹è±¡ç»‘å®š*/
 	VkBufferCreateInfo bufferInfo{};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	bufferInfo.size = size;
@@ -414,8 +414,8 @@ void VulkanApplication::initVulkan()
 	createSurface();
 	pickPhysicalDevice();
 	createLogicalDevice();
-	createSwapChain();       //´´½¨VkSwapchainKHR swapChain; ²¢´ÓswapChainÄÃµ½ËùÓĞVkImage·ÅÈëstd::vector<VkImage> swapChainImages;
-	createImageViews();      //´´½¨std::vector<VkImageView> swapChainImageViews²¢ºÍstd::vector<VkImage> swapChainImages;½¨Á¢Ò»¶ÔÒ»¹ØÁª
+	createSwapChain();       //åˆ›å»ºVkSwapchainKHR swapChain; å¹¶ä»swapChainæ‹¿åˆ°æ‰€æœ‰VkImageæ”¾å…¥std::vector<VkImage> swapChainImages;
+	createImageViews();      //åˆ›å»ºstd::vector<VkImageView> swapChainImageViewså¹¶å’Œstd::vector<VkImage> swapChainImages;å»ºç«‹ä¸€å¯¹ä¸€å…³è”
 
 	createRenderPass();
 	createDescriptorSetLayout();
@@ -527,10 +527,10 @@ void VulkanApplication::pickPhysicalDevice()
 #pragma endregion
 
 	for (const auto& device : devices) {
-		//Ñ°ÕÒºÏÊÊµÄdevice£º
-		//	*Éè±¸ÓµÓĞÖ§³ÖGraphicsÖ¸ÁîºÍvkGetPhysicalDeviceSurfaceSupportKHRµÄ¶ÓÁĞ×å 
-		//	*Éè±¸Ö§³ÖextensionsSupportedÀ©Õ¹
-		//	*Éè±¸ºÍsurfaceµÄÏÔÊ¾¸ñÊ½Æ¥ÅäswapChainAdequate
+		//å¯»æ‰¾åˆé€‚çš„deviceï¼š
+		//	*è®¾å¤‡æ‹¥æœ‰æ”¯æŒGraphicsæŒ‡ä»¤å’ŒvkGetPhysicalDeviceSurfaceSupportKHRçš„é˜Ÿåˆ—æ— 
+		//	*è®¾å¤‡æ”¯æŒextensionsSupportedæ‰©å±•
+		//	*è®¾å¤‡å’Œsurfaceçš„æ˜¾ç¤ºæ ¼å¼åŒ¹é…swapChainAdequate
 		if (isDeviceSuitable(device, surface, deviceExtensions)) {
 			physicalDevice = device;
 			msaaSamples = getMaxUsableSampleCount();
@@ -546,7 +546,7 @@ void VulkanApplication::pickPhysicalDevice()
 	swapChainSupport = querySwapChainSupport(physicalDevice, surface);
 }
 void VulkanApplication::createLogicalDevice() {
-	//ÓÃsetÈ¥ÖØ
+	//ç”¨setå»é‡
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 
@@ -629,9 +629,9 @@ void VulkanApplication::createSwapChain() {
 		.oldSwapchain = VK_NULL_HANDLE,
 	};
 
-	//½ÓÏÂÀ´£¬ÎÒÃÇĞèÒªÖ¸¶¨ÈçºÎ´¦Àí½«ÔÚ¶à¸ö¶ÓÁĞ×åÖĞÊ¹ÓÃµÄ½»»»Á´Ó³Ïñ¡£
-	//Èç¹ûÍ¼ĞÎ¶ÓÁĞ×åÓë±íÊ¾¶ÓÁĞ²»Í¬£¬ÄÇÃ´ÔÚÎÒÃÇµÄÓ¦ÓÃ³ÌĞòÖĞ½«³öÏÖÕâÖÖÇé¿ö¡£
-	//ÎÒÃÇ½«´ÓÍ¼ĞÎ¶ÓÁĞÖĞ»æÖÆ½»»»Á´ÖĞµÄÍ¼Ïñ£¬È»ºó½«ÆäÌá½»µ½ÑİÊ¾¶ÓÁĞÖĞ
+	//æ¥ä¸‹æ¥ï¼Œæˆ‘ä»¬éœ€è¦æŒ‡å®šå¦‚ä½•å¤„ç†å°†åœ¨å¤šä¸ªé˜Ÿåˆ—æ—ä¸­ä½¿ç”¨çš„äº¤æ¢é“¾æ˜ åƒã€‚
+	//å¦‚æœå›¾å½¢é˜Ÿåˆ—æ—ä¸è¡¨ç¤ºé˜Ÿåˆ—ä¸åŒï¼Œé‚£ä¹ˆåœ¨æˆ‘ä»¬çš„åº”ç”¨ç¨‹åºä¸­å°†å‡ºç°è¿™ç§æƒ…å†µã€‚
+	//æˆ‘ä»¬å°†ä»å›¾å½¢é˜Ÿåˆ—ä¸­ç»˜åˆ¶äº¤æ¢é“¾ä¸­çš„å›¾åƒï¼Œç„¶åå°†å…¶æäº¤åˆ°æ¼”ç¤ºé˜Ÿåˆ—ä¸­
 	//VK_SHARING_MODE_EXCLUSIVE: An image is owned by one queue family at a time and ownership must be explicitly transferred before using it in another queue family.This option offers the best performance.
 	//VK_SHARING_MODE_CONCURRENT : Images can be used across multiple queue families without explicit ownership transfers.
 	uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
@@ -652,7 +652,7 @@ void VulkanApplication::createSwapChain() {
 
 	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
 	swapChainImages.resize(imageCount);
-	//´Ó½»»»Á´ÀïÃæÄÃµ½VkImage
+	//ä»äº¤æ¢é“¾é‡Œé¢æ‹¿åˆ°VkImage
 	vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
 }
 void VulkanApplication::createImageViews() {
@@ -661,7 +661,7 @@ void VulkanApplication::createImageViews() {
 	//for example if it should be treated as a 2D texture depth texture without any mipmapping levels.
 
 	//An image view is sufficient to start using an image as a texture, but it's not quite ready to be used as a render target just yet. That requires one more step of indirection, known as a framebuffer. 
-	//Í¼ÏñÊÓÍ¼×ãÒÔ¿ªÊ¼Ê¹ÓÃÍ¼Ïñ×÷ÎªÎÆÀí£¬µ«Ëü»¹Ã»ÓĞ×¼±¸ºÃÓÃ×÷äÖÈ¾Ä¿±ê¡£Õâ»¹ĞèÒªÒ»¸ö¼ä½ÓµÄ²½Öè£¬³ÆÎªÖ¡»º³åÇø¡£
+	//å›¾åƒè§†å›¾è¶³ä»¥å¼€å§‹ä½¿ç”¨å›¾åƒä½œä¸ºçº¹ç†ï¼Œä½†å®ƒè¿˜æ²¡æœ‰å‡†å¤‡å¥½ç”¨ä½œæ¸²æŸ“ç›®æ ‡ã€‚è¿™è¿˜éœ€è¦ä¸€ä¸ªé—´æ¥çš„æ­¥éª¤ï¼Œç§°ä¸ºå¸§ç¼“å†²åŒºã€‚
 	swapChainImageViews.resize(swapChainImages.size());
 
 	for (size_t i = 0; i < swapChainImages.size(); i++) {
@@ -710,7 +710,7 @@ void VulkanApplication::createRenderPass() {
 
 	VkAttachmentReference colorAttachmentRef{
 		// specifies which attachment to reference by its index in the attachment descriptions array
-		.attachment = 0, //Õâ¸ö0Ó¦¸Ã±íÊ¾µÄÊÇrenderPassInfoÖĞpAttachmentsÊı×éµÚ0¸ö
+		.attachment = 0, //è¿™ä¸ª0åº”è¯¥è¡¨ç¤ºçš„æ˜¯renderPassInfoä¸­pAttachmentsæ•°ç»„ç¬¬0ä¸ª
 		//Textures and framebuffers in Vulkan are represented by VkImage objects with a certain pixel format,
 		.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
 	};
@@ -793,8 +793,8 @@ void VulkanApplication::createCommandPool() {
 		.queueFamilyIndex = indices.graphicsFamily.value(),
 	};
 
-	//ÃüÁî»º³åÇøÊÇÍ¨¹ıÔÚÆäÖĞÒ»¸öÉè±¸¶ÓÁĞÉÏÌá½»ËüÃÇÀ´Ö´ĞĞµÄ£¬¾ÍÏñÎÒÃÇ¼ìË÷µ½µÄÍ¼ĞÎºÍÑİÊ¾¶ÓÁĞÒ»Ñù¡£
-	//Ã¿¸öÃüÁî³ØÖ»ÄÜ·ÖÅäÔÚµ¥Ò»ÀàĞÍµÄ¶ÓÁĞÉÏÌá½»µÄÃüÁî»º³åÇø¡£ÎÒÃÇ½«¼ÇÂ¼ÓÃÓÚ»æÍ¼µÄÃüÁî£¬Õâ¾ÍÊÇÎÒÃÇÑ¡ÔñÍ¼ĞÎ¶ÓÁĞ×åµÄÔ­Òò¡£
+	//å‘½ä»¤ç¼“å†²åŒºæ˜¯é€šè¿‡åœ¨å…¶ä¸­ä¸€ä¸ªè®¾å¤‡é˜Ÿåˆ—ä¸Šæäº¤å®ƒä»¬æ¥æ‰§è¡Œçš„ï¼Œå°±åƒæˆ‘ä»¬æ£€ç´¢åˆ°çš„å›¾å½¢å’Œæ¼”ç¤ºé˜Ÿåˆ—ä¸€æ ·ã€‚
+	//æ¯ä¸ªå‘½ä»¤æ± åªèƒ½åˆ†é…åœ¨å•ä¸€ç±»å‹çš„é˜Ÿåˆ—ä¸Šæäº¤çš„å‘½ä»¤ç¼“å†²åŒºã€‚æˆ‘ä»¬å°†è®°å½•ç”¨äºç»˜å›¾çš„å‘½ä»¤ï¼Œè¿™å°±æ˜¯æˆ‘ä»¬é€‰æ‹©å›¾å½¢é˜Ÿåˆ—æ—çš„åŸå› ã€‚
 	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create command pool!");
 	}

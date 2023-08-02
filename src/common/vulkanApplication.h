@@ -22,12 +22,12 @@ struct Vertex2D {
 	glm::vec3 color;
 	glm::vec2 texCoord;
 
-	//¶ÔÓÚËùÓĞ¶¥µãÊı¾İµÄ±íÊö
+	//å¯¹äºæ‰€æœ‰é¡¶ç‚¹æ•°æ®çš„è¡¨è¿°
 	static VkVertexInputBindingDescription getBindingDescription() {
 		VkVertexInputBindingDescription bindingDescription{
-			//binding²ÎÊıÖ¸¶¨°ó¶¨Êı×éÖĞ°ó¶¨µÄË÷Òı
+			//bindingå‚æ•°æŒ‡å®šç»‘å®šæ•°ç»„ä¸­ç»‘å®šçš„ç´¢å¼•
 			.binding = 0,
-			//²½·ù²ÎÊıÖ¸¶¨´ÓÒ»¸öÌõÄ¿µ½ÏÂÒ»¸öÌõÄ¿µÄ×Ö½ÚÊı
+			//æ­¥å¹…å‚æ•°æŒ‡å®šä»ä¸€ä¸ªæ¡ç›®åˆ°ä¸‹ä¸€ä¸ªæ¡ç›®çš„å­—èŠ‚æ•°
 			.stride = sizeof(Vertex2D),
 			//VK_VERTEX_INPUT_RATE_VERTEX: Move to the next data entry after each vertex
 			//VK_VERTEX_INPUT_RATE_INSTANCE : Move to the next data entry after each instance
@@ -36,7 +36,7 @@ struct Vertex2D {
 		return bindingDescription;
 	}
 
-	//¶ÔÓÚµ¥¸ö¶¥µãÊı¾İµÄÃ¿¸öÊôĞÔ±íÊö
+	//å¯¹äºå•ä¸ªé¡¶ç‚¹æ•°æ®çš„æ¯ä¸ªå±æ€§è¡¨è¿°
 	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
 		//An attribute description struct describes how to extract a vertex attribute from a chunk of vertex data originating from a binding description
 		//We have two attributes, position and color, so we need two attribute description structs
@@ -89,7 +89,7 @@ struct Vertex3D {
 		return pos == other.pos && color == other.color && texCoord == other.texCoord;
 	}
 
-	//¶ÔÓÚËùÓĞ¶¥µãÊı¾İµÄ±íÊö
+	//å¯¹äºæ‰€æœ‰é¡¶ç‚¹æ•°æ®çš„è¡¨è¿°
 	static VkVertexInputBindingDescription getBindingDescription() {
 		VkVertexInputBindingDescription bindingDescription{
 			.binding = 0,
@@ -99,7 +99,7 @@ struct Vertex3D {
 		return bindingDescription;
 	}
 
-	//¶ÔÓÚµ¥¸ö¶¥µãÊı¾İµÄÃ¿¸öÊôĞÔ±íÊö
+	//å¯¹äºå•ä¸ªé¡¶ç‚¹æ•°æ®çš„æ¯ä¸ªå±æ€§è¡¨è¿°
 	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
 	
 		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
@@ -135,7 +135,7 @@ struct SwapChainSupportDetails {
 };
 
 struct QueueFamilyIndices {
-	//Ö§³ÖÍ¼ĞÎÃüÁîµÄ¶ÓÁĞ×åºÍÖ§³Ö±í´ïµÄ¶ÓÁĞ×å¿ÉÄÜ²»ÖØµş
+	//æ”¯æŒå›¾å½¢å‘½ä»¤çš„é˜Ÿåˆ—æ—å’Œæ”¯æŒè¡¨è¾¾çš„é˜Ÿåˆ—æ—å¯èƒ½ä¸é‡å 
 	std::optional<uint32_t> graphicsFamily;  //supporting drawing commands
 	std::optional<uint32_t> presentFamily;   //supporting presentation commands
 

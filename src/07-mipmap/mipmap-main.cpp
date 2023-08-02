@@ -124,10 +124,10 @@ void MipmapApplication::createGraphicsPipeline()
 
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 
-	/*VkPipelineVertexInputStateCreateInfo½á¹¹ÃèÊö½«´«µİ¸ø¶¥µã×ÅÉ«Æ÷µÄ¶¥µãÊı¾İµÄ¸ñÊ½¡£Ëü´óÖÂÒÔÁ½ÖÖ·½Ê½ÃèÊöÁËÕâÒ»µã£º
-		°ó¶¨Bindings£ºÊı¾İÖ®¼äµÄ¼ä¾à£¬ÒÔ¼°Êı¾İÊÇ°´¶¥µã»¹ÊÇ°´ÊµÀı£¨Çë²Î¼ûÊµÀı»¯£©
-		ÊôĞÔÃèÊöAttribute descriptions£º´«µİ¸ø¶¥µã×ÅÉ«Æ÷µÄÊôĞÔµÄÀàĞÍ£¬´ÓÄÄ¸ö°ó¶¨¼ÓÔØÕâĞ©ÊôĞÔÒÔ¼°Æ«ÒÆÁ¿
-	ÒòÎªÎÒÃÇÖ±½ÓÔÚ¶¥µã×ÅÉ«Æ÷ÖĞ¶Ô¶¥µãÊı¾İ½øĞĞÓ²±àÂë£¬ËùÒÔÎÒÃÇ½«Ìî³ä´Ë½á¹¹ÒÔÖ¸¶¨Ä¿Ç°Ã»ÓĞÒª¼ÓÔØµÄ¶¥µãÊı¾İ¡£ÎÒÃÇ½«ÔÚ¶¥µã»º³åÇøÒ»ÕÂÖĞ»Øµ½ÕâÒ»µã¡£*/
+	/*VkPipelineVertexInputStateCreateInfoç»“æ„æè¿°å°†ä¼ é€’ç»™é¡¶ç‚¹ç€è‰²å™¨çš„é¡¶ç‚¹æ•°æ®çš„æ ¼å¼ã€‚å®ƒå¤§è‡´ä»¥ä¸¤ç§æ–¹å¼æè¿°äº†è¿™ä¸€ç‚¹ï¼š
+		ç»‘å®šBindingsï¼šæ•°æ®ä¹‹é—´çš„é—´è·ï¼Œä»¥åŠæ•°æ®æ˜¯æŒ‰é¡¶ç‚¹è¿˜æ˜¯æŒ‰å®ä¾‹ï¼ˆè¯·å‚è§å®ä¾‹åŒ–ï¼‰
+		å±æ€§æè¿°Attribute descriptionsï¼šä¼ é€’ç»™é¡¶ç‚¹ç€è‰²å™¨çš„å±æ€§çš„ç±»å‹ï¼Œä»å“ªä¸ªç»‘å®šåŠ è½½è¿™äº›å±æ€§ä»¥åŠåç§»é‡
+	å› ä¸ºæˆ‘ä»¬ç›´æ¥åœ¨é¡¶ç‚¹ç€è‰²å™¨ä¸­å¯¹é¡¶ç‚¹æ•°æ®è¿›è¡Œç¡¬ç¼–ç ï¼Œæ‰€ä»¥æˆ‘ä»¬å°†å¡«å……æ­¤ç»“æ„ä»¥æŒ‡å®šç›®å‰æ²¡æœ‰è¦åŠ è½½çš„é¡¶ç‚¹æ•°æ®ã€‚æˆ‘ä»¬å°†åœ¨é¡¶ç‚¹ç¼“å†²åŒºä¸€ç« ä¸­å›åˆ°è¿™ä¸€ç‚¹ã€‚*/
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
 		.pVertexBindingDescriptions = &bindingDescription,
@@ -137,10 +137,10 @@ void MipmapApplication::createGraphicsPipeline()
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
 
 
-	/*VkPipelineInputAssemblyStateCreateInfo½á¹¹ÃèÊöÁËÁ½¼şÊÂ£º
-		what kind of geometry will be drawn from the vertices£¬
-		if primitive restart should be enabled¡£
-	Ç°ÕßÔÚÍØÆË³ÉÔ±ÖĞÖ¸¶¨£¬¿ÉÒÔ¾ßÓĞÒÔÏÂÖµ£º
+	/*VkPipelineInputAssemblyStateCreateInfoç»“æ„æè¿°äº†ä¸¤ä»¶äº‹ï¼š
+		what kind of geometry will be drawn from the verticesï¼Œ
+		if primitive restart should be enabledã€‚
+	å‰è€…åœ¨æ‹“æ‰‘æˆå‘˜ä¸­æŒ‡å®šï¼Œå¯ä»¥å…·æœ‰ä»¥ä¸‹å€¼ï¼š
 		VK_PRIMITIVE_TOPOLOGY_POINT_LIST: points from vertices
 		VK_PRIMITIVE_TOPOLOGY_LINE_LIST: line from every 2 vertices without reuse
 		VK_PRIMITIVE_TOPOLOGY_LINE_STRIP: the end vertex of every line is used as start vertex for the next line
@@ -159,11 +159,11 @@ void MipmapApplication::createGraphicsPipeline()
 		.scissorCount = 1,
 	};
 
-	/*¹âÕ¤»¯Æ÷´Ó¶¥µã×ÅÉ«Æ÷ÖĞ»ñÈ¡ÓÉ¶¥µãËÜÔìµÄ¼¸ºÎÌå£¬²¢½«Æä×ª»¯ÎªÆ¬¶ÎÒÔÓÉÆ¬¶Î×ÅÉ«Æ÷×ÅÉ«¡£
-	Ëü»¹Ö´ĞĞÉî¶È²âÊÔ¡¢Ãæ²¿ÌŞ³ıºÍ¼ôµ¶²âÊÔ£¬²¢ÇÒ¿ÉÒÔÅäÖÃÎªÊä³öÌî³äÕû¸ö¶à±ßĞÎ»ò½öÌî³ä±ßÔµµÄÆ¬¶Î£¨Ïß¿òäÖÈ¾£©¡£*/
+	/*å…‰æ …åŒ–å™¨ä»é¡¶ç‚¹ç€è‰²å™¨ä¸­è·å–ç”±é¡¶ç‚¹å¡‘é€ çš„å‡ ä½•ä½“ï¼Œå¹¶å°†å…¶è½¬åŒ–ä¸ºç‰‡æ®µä»¥ç”±ç‰‡æ®µç€è‰²å™¨ç€è‰²ã€‚
+	å®ƒè¿˜æ‰§è¡Œæ·±åº¦æµ‹è¯•ã€é¢éƒ¨å‰”é™¤å’Œå‰ªåˆ€æµ‹è¯•ï¼Œå¹¶ä¸”å¯ä»¥é…ç½®ä¸ºè¾“å‡ºå¡«å……æ•´ä¸ªå¤šè¾¹å½¢æˆ–ä»…å¡«å……è¾¹ç¼˜çš„ç‰‡æ®µï¼ˆçº¿æ¡†æ¸²æŸ“ï¼‰ã€‚*/
 	VkPipelineRasterizationStateCreateInfo rasterizer{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
-		//Èç¹ûdepthClampEnable±»ÉèÖÃÎªVK_TRUE£¬ÄÇÃ´ÔÚ½üÆ½ÃæºÍÔ¶Æ½ÃæÖ®ÍâµÄÆ¬¶Î½«±»¼Ğ×¡£¬¶ø²»ÊÇ¶ªÆúËüÃÇ¡£
+		//å¦‚æœdepthClampEnableè¢«è®¾ç½®ä¸ºVK_TRUEï¼Œé‚£ä¹ˆåœ¨è¿‘å¹³é¢å’Œè¿œå¹³é¢ä¹‹å¤–çš„ç‰‡æ®µå°†è¢«å¤¹ä½ï¼Œè€Œä¸æ˜¯ä¸¢å¼ƒå®ƒä»¬ã€‚
 		.depthClampEnable = VK_FALSE,
 		.rasterizerDiscardEnable = VK_FALSE,
 		//VK_POLYGON_MODE_FILL: fill the area of the polygon with fragments
@@ -182,10 +182,10 @@ void MipmapApplication::createGraphicsPipeline()
 		.sampleShadingEnable = VK_FALSE,
 	};
 
-	//Æ¬¶Î×ÅÉ«Æ÷·µ»ØÑÕÉ«ºó£¬ĞèÒª½«ÆäÓëÖ¡»º³åÇøÖĞÒÑ¾­´æÔÚµÄÑÕÉ«×éºÏ¡£
-	//ÕâÖÖ×ª»»±»³ÆÎªÑÕÉ«»ìºÏ£¬ÓĞÁ½ÖÖ·½·¨¿ÉÒÔÊµÏÖ£º
-	//	½«ĞÂ¾ÉÖµ»ìºÏÒÔÉú³É×îÖÕÑÕÉ«
-	//	Ê¹ÓÃÖğÎ»ÔËËã×éºÏĞÂ¾ÉÖµ
+	//ç‰‡æ®µç€è‰²å™¨è¿”å›é¢œè‰²åï¼Œéœ€è¦å°†å…¶ä¸å¸§ç¼“å†²åŒºä¸­å·²ç»å­˜åœ¨çš„é¢œè‰²ç»„åˆã€‚
+	//è¿™ç§è½¬æ¢è¢«ç§°ä¸ºé¢œè‰²æ··åˆï¼Œæœ‰ä¸¤ç§æ–¹æ³•å¯ä»¥å®ç°ï¼š
+	//	å°†æ–°æ—§å€¼æ··åˆä»¥ç”Ÿæˆæœ€ç»ˆé¢œè‰²
+	//	ä½¿ç”¨é€ä½è¿ç®—ç»„åˆæ–°æ—§å€¼
 	VkPipelineColorBlendAttachmentState colorBlendAttachment{
 		.blendEnable = VK_FALSE,
 		.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
@@ -312,7 +312,7 @@ void MipmapApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint3
 {
 	//If the command buffer was already recorded once, 
 	//then a call to vkBeginCommandBuffer will implicitly reset it. 
-	//It's not possible to append commands to a buffer at a later time. vkBeginCommandBuffer»áÖØÖÃCommandBuffer
+	//It's not possible to append commands to a buffer at a later time. vkBeginCommandBufferä¼šé‡ç½®CommandBuffer
 	VkCommandBufferBeginInfo beginInfo{
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		.flags = 0, // Optional
@@ -687,7 +687,7 @@ void MipmapApplication::createRenderPass()
 
 	VkAttachmentReference colorAttachmentRef{
 		// specifies which attachment to reference by its index in the attachment descriptions array
-		.attachment = 0, //Õâ¸ö0Ó¦¸Ã±íÊ¾µÄÊÇrenderPassInfoÖĞpAttachmentsÊı×éµÚ0¸ö
+		.attachment = 0, //è¿™ä¸ª0åº”è¯¥è¡¨ç¤ºçš„æ˜¯renderPassInfoä¸­pAttachmentsæ•°ç»„ç¬¬0ä¸ª
 		//Textures and framebuffers in Vulkan are represented by VkImage objects with a certain pixel format,
 		.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
 	};
@@ -907,8 +907,8 @@ void MipmapApplication::transitionImageLayout(VkImage image, VkFormat format, Vk
 	VkPipelineStageFlags destinationStage;
 
 	/*There are two transitions we need to handle :
-		Undefined ¡ú transfer destination : transfer writes that don't need to wait on anything
-		Transfer destination ¡ú shader reading : shader reads should wait on transfer writes, specifically the shader reads in the fragment shader,
+		Undefined â†’ transfer destination : transfer writes that don't need to wait on anything
+		Transfer destination â†’ shader reading : shader reads should wait on transfer writes, specifically the shader reads in the fragment shader,
 			because that's where we're going to use the texture
 	*/
 	if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
